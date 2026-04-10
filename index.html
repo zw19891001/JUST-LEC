@@ -538,6 +538,72 @@ function autoResize() {
 }
 
 // ===== 核心 =====
+// ===== API Configuration =====
+const API_KEY = "sk-fb7fa9a2ed264a5fb3aaae80b6682277";
+const API_BASE = "https://dashscope.aliyuncs.com/compatible-mode/v1";
+const MODEL_NAME = "qwen-plus";
+
+async function callAI(messages, maxTokens) {
+  try {
+    var resp = await fetch(API_BASE + "/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: MODEL_NAME,
+        messages: messages,
+        max_tokens: maxTokens || 800,
+        temperature: 0.7
+      })
+    });
+    if (!resp.ok) {
+      var err = await resp.text();
+      throw new Error("API Error " + resp.status + ": " + err);
+    }
+    var data = await resp.json();
+    return data.choices[0].message.content;
+  } catch(e) {
+    console.error("AI call failed:", e);
+    return null;
+  }
+}
+
+
+// ===== 阿里云百炼 Dashscope API =====
+const API_KEY = "sk-fb7fa9a2ed264a5fb3aaae80b6682277";
+const API_BASE = "https://dashscope.aliyuncs.com/compatible-mode/v1";
+const MODEL_NAME = "qwen-plus";
+
+async function callAI(messages, maxTokens) {
+  try {
+    var resp = await fetch(API_BASE + "/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: MODEL_NAME,
+        messages: messages,
+        max_tokens: maxTokens || 800,
+        temperature: 0.7
+      })
+    });
+    if (!resp.ok) {
+      var errText = await resp.text();
+      console.error("API Error:", resp.status, errText);
+      return null;
+    }
+    var data = await resp.json();
+    return data.choices[0].message.content;
+  } catch(e) {
+    console.error("AI call failed:", e);
+    return null;
+  }
+}
+
 function sendMessage() {
   var input = document.getElementById('inputText');
   var text = input.value.trim();
@@ -547,14 +613,26 @@ function sendMessage() {
   addMsg('user', text);
   conversationHistory.push({ role: 'user', content: text });
   showTyping();
-  setTimeout(function() {
+
+  var msgs = conversationHistory.map(function(m) {
+    return { role: m.role, content: m.content };
+  });
+
+  callAI(msgs, 800).then(function(resp) {
     removeTyping();
-    var resp = aiResponse(text);
-    addMsg('ai', resp);
-    conversationHistory.push({ role: 'ai', content: resp });
+    if (resp) {
+      addMsg('ai', resp);
+      conversationHistory.push({ role: 'ai', content: resp });
+    } else {
+      addMsg('ai', '抱歉，AI服务暂时不可用，请检查网络连接后重试。');
+    }
     saveHistory();
     scrollBottom();
-  }, 1000 + Math.random() * 800);
+  }).catch(function() {
+    removeTyping();
+    addMsg('ai', '抱歉，AI服务暂时不可用，请稍后重试。');
+    scrollBottom();
+  });
 }
 
 function aiResponse(text) {
@@ -578,14 +656,15 @@ function aiResponse(text) {
   return '我是<span class="hl">交大智培</span>，上海交通大学终身教育学院的官方 AI 助手。<br><br><strong>我能为您：</strong><br>• 🎯 生成定制培训方案（党委/政府/企业）<br>• 📚 匹配课程模块与师资资源<br>• 💰 提供报价预算参考<br>• 🔄 根据反馈优化方案<br><br>请告诉我您的培训需求，或直接点击上方卡片开始！';
 }
 
+
 function generatePlan() {
   var clientType = document.getElementById('fClientType').value;
   var clientName = document.getElementById('fClientName').value.trim();
   var projectName = document.getElementById('fProjectName').value.trim() || (clientName + '定制化培训项目');
-  var duration = document.getElementById('fDuration').value;
-  var budget = document.getElementById('fBudget').value;
-  var needs = document.getElementById('fNeeds').value.trim();
-  var people = document.getElementById('fPeople').value || '30';
+  var duration = document.getElementById('fDuration').value || '5天';
+  var budget = document.getElementById('fBudget').value || '待定';
+  var needs = document.getElementById('fNeeds').value.trim() || '通用能力提升';
+  var people = document.getElementById('fPeople').value || '30-50';
   var schedule = document.getElementById('fSchedule').value.trim() || '待定';
 
   if (!clientType || !clientName) { toast('请填写客户类型和单位名称'); return; }
@@ -595,17 +674,97 @@ function generatePlan() {
   addMsg('user', '请求生成方案：' + projectName);
   showTyping();
 
-  setTimeout(function() {
+  var prompt = '你是上海交通大学终身教育学院的AI培训方案专家。请根据以下信息，生成一份专业、详细的定制化培训方案。方案要内容专业、格式规范、体现交大水准。
+
+【客户信息】
+客户类型：' + clientType + '
+客户单位：' + clientName + '
+培训项目：' + projectName + '
+培训人数：' + people + '人
+培训时长：' + duration + '
+人均预算：' + budget + '
+核心需求：' + needs + '
+期望时间：' + schedule + '
+
+【方案要求】
+请生成包含以下八部分的完整培训方案（用清晰的Markdown格式，h2为一级标题，h3为二级标题，表格用Markdown表格）：
+一、项目背景分析
+二、培训目标设定（用表格列出4个层次）
+三、课程体系设计（按模块列出，每门课用表格：课程名称|核心内容|师资来源|学时）
+四、师资安排建议（用表格列出拟邀师资及研究方向）
+五、教学管理与服务保障（用表格列出管理措施）
+六、培训报价与预算说明（用表格列出各项费用）
+七、办学条件与联系方式
+八、方案总结
+
+注意：所有课程和师资信息要具体、真实、可落地，充分体现上海交通大学学术水准！';
+
+  callAI([{ role: "user", content: prompt }], 2000).then(function(resp) {
     removeTyping();
-    var html = buildPlan(clientType, clientName, projectName, duration, budget, needs, people, schedule);
-    currentPlan = html;
-    addPlanMsg(html);
-    conversationHistory.push({ role: 'user', content: '生成方案：' + projectName });
-    conversationHistory.push({ role: 'ai', content: '[方案已生成]' });
-    saveHistory();
+    if (resp) {
+      var planHTML = '<div class="plan-box a-in">' +
+        '<div class="plan-top-bar">' +
+          '<div class="plan-top-left">' +
+            '<img class="plan-top-logo" src="sjtu_logo.png" alt="交大">' +
+            '<div class="plan-top-title">上海交通大学终身教育学院 — AI生成定制培训方案</div>' +
+          '</div>' +
+          '<div class="plan-top-right">' +
+            '<button class="plan-cmd" id="copyBtn">📋 复制全文</button>' +
+            '<button class="plan-cmd" id="print2Btn">🖨 打印</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="plan-body" id="planBody">' +
+          '<h2>上海交通大学终身教育学院「' + clientName + '」定制化培训方案</h2>' +
+          '<p style="text-align:center;color:#888;font-size:11.5px;">方案编号：SJTU-AI-' + String(Date.now()).slice(-6) + '  |  <span style="color:#27ae60;font-weight:600;">🤖 AI智能生成</span> | 培训人数：' + people + '人  | 预排时间：' + schedule + '</p>' +
+          '<div style="background:#f0f4ff;border:1px solid #c0d0f0;border-radius:10px;padding:18px 20px;margin:14px 0;font-size:13.5px;line-height:2;color:#222;">' +
+            resp.replace(/
+/g, '<br>') +
+          '</div>' +
+          '<p style="background:#fff8e8;padding:12px 16px;border-radius:8px;font-size:12.5px;line-height:1.8;">💡 <strong>说明：</strong>以上方案由阿里云通义千问AI智能生成，内容仅供参考。如需进一步调整或有特殊需求，请联系学院工作人员完善方案细节。' +
+          '<br>📞 联系方式：021-6282xxxx（张老师）/ cep@sjtu.edu.cn / sce.sjtu.edu.cn</p>' +
+          '<div class="plan-watermark">上海交通大学终身教育学院 · sce.sjtu.edu.cn · 饥水思水 · 爱国荣校</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:7px;margin-top:12px;">' +
+        '<button class="gen-btn" style="flex:1;padding:11px;" id="regenBtn">🔄 AI重新生成方案</button>' +
+        '<button class="action-btn primary" style="flex:1;padding:11px;border-radius:10px;" id="exportBtn2">📥 导出PDF</button>' +
+      '</div>';
+
+      currentPlan = planHTML;
+      addPlanMsg(planHTML);
+      conversationHistory.push({ role: 'user', content: '生成方案：' + projectName });
+      conversationHistory.push({ role: 'ai', content: '[方案已生成]' });
+      saveHistory();
+      scrollBottom();
+      toast('✅ AI方案生成成功！');
+
+      setTimeout(function() {
+        var rb = document.getElementById('regenBtn');
+        if (rb) rb.addEventListener('click', function() { generatePlan(); });
+        var cb = document.getElementById('copyBtn');
+        if (cb) cb.addEventListener('click', function() {
+          var body = document.getElementById('planBody');
+          if (body) {
+            navigator.clipboard.writeText(body.innerText).then(function() {
+              cb.classList.add('copied');
+              cb.textContent = '✅ 已复制';
+              setTimeout(function() { cb.classList.remove('copied'); cb.textContent = '📋 复制全文'; }, 2000);
+            });
+          }
+        });
+        var eb = document.getElementById('exportBtn2');
+        if (eb) eb.addEventListener('click', function() { window.print(); });
+      }, 300);
+    } else {
+      removeTyping();
+      addMsg('ai', '抱歉，AI服务暂时不可用，请检查网络连接后重试。');
+      scrollBottom();
+    }
+  }).catch(function() {
+    removeTyping();
+    addMsg('ai', '抱歉，AI服务暂时不可用，请稍后重试。');
     scrollBottom();
-    toast('✅ 方案生成成功！');
-  }, 2500);
+  });
 }
 
 function buildPlan(clientType, clientName, projectName, duration, budget, needs, people, schedule) {
