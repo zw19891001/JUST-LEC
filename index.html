@@ -214,7 +214,7 @@
   <aside class="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-logo-row">
-        <img class="sidebar-logo-img" id="sidebarLogo" src="sjtu_logo.png" alt="交大">
+        <div style="width:52px;height:52px;background:rgba(196,146,42,0.9);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;border:1px solid rgba(255,255,255,0.2);">终教</div>
         <div>
           <div class="sidebar-school-name">终身教育学院</div>
           <div class="sidebar-school-en">LIFELONG EDUCATION COLLEGE</div>
@@ -239,7 +239,7 @@
   <main class="chat-area">
     <div class="chat-header">
       <div class="header-left">
-        <img class="header-logo" id="headerLogo" src="sjtu_logo.png" alt="交大">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:10px;font-weight:700;color:white;flex-shrink:0;">终教<br><span style="font-size:7px;letter-spacing:0.5px;">学院</span></div>
         <div>
           <div class="header-title">交大智培 — 定制培训方案生成</div>
           <div class="header-sub">终身教育学院官方智能助手</div>
@@ -256,7 +256,7 @@
         <!-- 欢迎页 -->
         <div id="welcomePage">
           <div class="welcome-box">
-            <img class="welcome-logo" id="welcomeLogo" src="sjtu_logo.png" alt="欢迎">
+            <div style="width:88px;height:88px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:22px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 32px rgba(0,58,110,0.2);">终教<br><span style="font-size:11px;letter-spacing:1px;">学院</span></div>
             <div class="welcome-title">欢迎使用交大智培</div>
             <div class="welcome-desc">
               我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>
@@ -673,7 +673,7 @@ function generatePlan() {
       var planHTML = '<div class="plan-box a-in">' +
         '<div class="plan-top-bar">' +
           '<div class="plan-top-left">' +
-            '<img class="plan-top-logo" src="sjtu_logo.png" alt="交大">' +
+            '<div style="width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:9px;font-weight:700;color:white;flex-shrink:0;">终教</div>' +
             '<div class="plan-top-title">终身教育学院 — AI生成定制培训方案</div>' +
           '</div>' +
           '<div class="plan-top-right">' +
@@ -746,7 +746,7 @@ function buildPlan(clientType, clientName, projectName, duration, budget, needs,
   return '<div class="plan-box a-in">' +
     '<div class="plan-top-bar">' +
       '<div class="plan-top-left">' +
-        '<img class="plan-top-logo" src="sjtu_logo.png" alt="交大">' +
+        '<div style="width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:9px;font-weight:700;color:white;flex-shrink:0;">终教</div>' +
         '<div class="plan-top-title">终身教育学院 — 定制培训方案</div>' +
       '</div>' +
       '<div class="plan-top-right">' +
@@ -946,7 +946,7 @@ function addMsg(role, content) {
   var div = document.createElement('div');
   div.className = 'msg msg-' + role + ' a-in';
 
-  var logo = '<img class="msg-avatar" src="sjtu_logo.png">';
+  var logo = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div>';
   var bubble = '<div class="msg-bubble">' + content.replace(/\n/g, '<br>') + '</div>';
   var time = '<div class="msg-time">' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}) + '</div>';
 
@@ -965,7 +965,7 @@ function addPlanMsg(html) {
 
   var div = document.createElement('div');
   div.className = 'msg msg-ai a-in';
-  div.innerHTML = '<img class="msg-avatar" src="sjtu_logo.png"><div class="msg-right"><div class="msg-bubble" style="padding:0;background:none;border:none;">' + html + '</div></div>';
+  div.innerHTML = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div><div class="msg-right"><div class="msg-bubble" style="padding:0;background:none;border:none;">' + html + '</div></div>';
   container.appendChild(div);
 
   // 绑定方案内按钮
@@ -989,7 +989,7 @@ function showTyping() {
   var div = document.createElement('div');
   div.className = 'msg msg-ai';
   div.id = 'typingBox';
-  div.innerHTML = '<img class="msg-avatar" src="sjtu_logo.png"><div class="msg-right"><div class="msg-bubble" style="padding:14px 18px;"><div class="typing-row"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>';
+  div.innerHTML = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div><div class="msg-right"><div class="msg-bubble" style="padding:14px 18px;"><div class="typing-row"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>';
   container.appendChild(div);
   scrollBottom();
 }
@@ -1011,7 +1011,7 @@ function newChat() {
   document.getElementById('msgContainer').innerHTML = '' +
     '<div id="welcomePage">' +
       '<div class="welcome-box">' +
-        '<img class="welcome-logo" src="sjtu_logo.png" alt="欢迎">' +
+        '<div style="width:88px;height:88px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:22px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 32px rgba(0,58,110,0.2);">终教<br><span style="font-size:11px;letter-spacing:1px;">学院</span></div>' +
         '<div class="welcome-title">欢迎使用交大智培</div>' +
         '<div class="welcome-desc">我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。</div>' +
         '<div class="type-cards">' +
