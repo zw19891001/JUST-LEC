@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>交大智培 — 上海交通大学终身教育学院定制培训方案生成系统</title>
-<meta name="description" content="上海交通大学终身教育学院官方AI定制培训方案生成助手">
+<title>交大智培 — 终身教育学院定制培训方案生成系统</title>
+<meta name="description" content="终身教育学院官方AI定制培训方案生成助手">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -231,7 +231,7 @@
     </div>
     <div class="sidebar-bottom">
       <div class="motto">饮水思源 · 爱国荣校</div>
-      <div class="footer-text">© 上海交通大学终身教育学院<br>技术支持：AI 方案生成系统 v2.0</div>
+      <div class="footer-text">© 终身教育学院<br>技术支持：AI 方案生成系统 v2.0</div>
     </div>
   </aside>
 
@@ -242,7 +242,7 @@
         <img class="header-logo" id="headerLogo" src="sjtu_logo.png" alt="交大">
         <div>
           <div class="header-title">交大智培 — 定制培训方案生成</div>
-          <div class="header-sub">上海交通大学终身教育学院官方智能助手</div>
+          <div class="header-sub">终身教育学院官方智能助手</div>
         </div>
       </div>
       <div class="header-right">
@@ -259,7 +259,7 @@
             <img class="welcome-logo" id="welcomeLogo" src="sjtu_logo.png" alt="欢迎">
             <div class="welcome-title">欢迎使用交大智培</div>
             <div class="welcome-desc">
-              我是上海交通大学终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>
+              我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>
               依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。
             </div>
             <div class="type-cards">
@@ -463,7 +463,7 @@
 
       <div class="info-box">
         <div class="info-box-title">📖 关于学院</div>
-        <p>上海交通大学终身教育学院是上海交通大学直属单位，由原继续教育学院和海外教育学院合并而成。学院主动对接国家战略性新兴产业和前沿领域，成立<span class="hl">"全球创新研究院"</span>，聚焦<span class="hl">产业创新、科技创新、管理创新、设计创新</span>，探索构建多学科融合的"综合性、创新型、国际化"终身教育体系。</p>
+        <p>终身教育学院是上海交通大学直属单位，由原继续教育学院和海外教育学院合并而成。学院主动对接国家战略性新兴产业和前沿领域，成立<span class="hl">"全球创新研究院"</span>，聚焦<span class="hl">产业创新、科技创新、管理创新、设计创新</span>，探索构建多学科融合的"综合性、创新型、国际化"终身教育体系。</p>
       </div>
 
       <div class="info-box">
@@ -638,7 +638,7 @@ function sendMessage() {
 function aiResponse(text) {
   var t = text.toLowerCase();
   if (t.includes('党委') || t.includes('政府') || t.includes('干部')) {
-    return '好的！我将为您生成党委/政府系统领导干部定制培训方案。<br><br>上海交通大学终身教育学院依托<span class="hl">国际关系学院、安泰经济与管理学院、马克思主义学院</span>等优势学科资源，积累了<span class="hl">30+省市区县</span>的干部培训经验。<br><br><strong>请补充以下信息：</strong><br>1. 培训人数和时长（建议 5-7 天）<br>2. 人均预算范围<br>3. 核心培训主题方向（如：数字政府、基层治理、乡村振兴等）<br>4. 期望的现场教学安排<br><br>或在右侧填写「需求表单」，一键生成完整方案！';
+    return '好的！我将为您生成党委/政府系统领导干部定制培训方案。<br><br>终身教育学院依托<span class="hl">国际关系学院、安泰经济与管理学院、马克思主义学院</span>等优势学科资源，积累了<span class="hl">30+省市区县</span>的干部培训经验。<br><br><strong>请补充以下信息：</strong><br>1. 培训人数和时长（建议 5-7 天）<br>2. 人均预算范围<br>3. 核心培训主题方向（如：数字政府、基层治理、乡村振兴等）<br>4. 期望的现场教学安排<br><br>或在右侧填写「需求表单」，一键生成完整方案！';
   }
   if (t.includes('企业') || t.includes('内训')) {
     return '了解！企业内训是学院的传统优势领域。我们已服务过<span class="hl">石化、电力、钢铁、金融、建筑</span>等多个行业的领军企业。<br><br><strong>请提供：</strong><br>1. 企业类型（国企/民企/外企）<br>2. 培训对象层级（中层/高层/骨干）<br>3. 核心主题（战略领导力/数字化转型/创新管理等）<br>4. 是否需要标杆企业参访（张江科学城，商飞集团等）<br><br>填写右侧表单，立即生成专属方案！';
@@ -653,7 +653,7 @@ function aiResponse(text) {
       return '目前暂无已生成的方案可供修改。请先告诉我您的需求，我会为您生成初始方案，再根据您的意见调整。';
     }
   }
-  return '我是<span class="hl">交大智培</span>，上海交通大学终身教育学院的官方 AI 助手。<br><br><strong>我能为您：</strong><br>• 🎯 生成定制培训方案（党委/政府/企业）<br>• 📚 匹配课程模块与师资资源<br>• 💰 提供报价预算参考<br>• 🔄 根据反馈优化方案<br><br>请告诉我您的培训需求，或直接点击上方卡片开始！';
+  return '我是<span class="hl">交大智培</span>，终身教育学院的官方 AI 助手。<br><br><strong>我能为您：</strong><br>• 🎯 生成定制培训方案（党委/政府/企业）<br>• 📚 匹配课程模块与师资资源<br>• 💰 提供报价预算参考<br>• 🔄 根据反馈优化方案<br><br>请告诉我您的培训需求，或直接点击上方卡片开始！';
 }
 
 
@@ -674,7 +674,7 @@ function generatePlan() {
   addMsg('user', '请求生成方案：' + projectName);
   showTyping();
 
-  var prompt = '你是上海交通大学终身教育学院的AI培训方案专家。请根据以下信息，生成一份专业、详细的定制化培训方案。方案要内容专业、格式规范、体现交大水准。
+  var prompt = '你是终身教育学院的AI培训方案专家。请根据以下信息，生成一份专业、详细的定制化培训方案。方案要内容专业、格式规范、体现交大水准。
 
 【客户信息】
 客户类型：' + clientType + '
@@ -706,7 +706,7 @@ function generatePlan() {
         '<div class="plan-top-bar">' +
           '<div class="plan-top-left">' +
             '<img class="plan-top-logo" src="sjtu_logo.png" alt="交大">' +
-            '<div class="plan-top-title">上海交通大学终身教育学院 — AI生成定制培训方案</div>' +
+            '<div class="plan-top-title">终身教育学院 — AI生成定制培训方案</div>' +
           '</div>' +
           '<div class="plan-top-right">' +
             '<button class="plan-cmd" id="copyBtn">📋 复制全文</button>' +
@@ -714,7 +714,7 @@ function generatePlan() {
           '</div>' +
         '</div>' +
         '<div class="plan-body" id="planBody">' +
-          '<h2>上海交通大学终身教育学院「' + clientName + '」定制化培训方案</h2>' +
+          '<h2>终身教育学院「' + clientName + '」定制化培训方案</h2>' +
           '<p style="text-align:center;color:#888;font-size:11.5px;">方案编号：SJTU-AI-' + String(Date.now()).slice(-6) + '  |  <span style="color:#27ae60;font-weight:600;">🤖 AI智能生成</span> | 培训人数：' + people + '人  | 预排时间：' + schedule + '</p>' +
           '<div style="background:#f0f4ff;border:1px solid #c0d0f0;border-radius:10px;padding:18px 20px;margin:14px 0;font-size:13.5px;line-height:2;color:#222;">' +
             resp.replace(/
@@ -722,7 +722,7 @@ function generatePlan() {
           '</div>' +
           '<p style="background:#fff8e8;padding:12px 16px;border-radius:8px;font-size:12.5px;line-height:1.8;">💡 <strong>说明：</strong>以上方案由阿里云通义千问AI智能生成，内容仅供参考。如需进一步调整或有特殊需求，请联系学院工作人员完善方案细节。' +
           '<br>📞 联系方式：021-6282xxxx（张老师）/ cep@sjtu.edu.cn / sce.sjtu.edu.cn</p>' +
-          '<div class="plan-watermark">上海交通大学终身教育学院 · sce.sjtu.edu.cn · 饥水思水 · 爱国荣校</div>' +
+          '<div class="plan-watermark">终身教育学院 · sce.sjtu.edu.cn · 饥水思水 · 爱国荣校</div>' +
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:7px;margin-top:12px;">' +
@@ -779,7 +779,7 @@ function buildPlan(clientType, clientName, projectName, duration, budget, needs,
     '<div class="plan-top-bar">' +
       '<div class="plan-top-left">' +
         '<img class="plan-top-logo" src="sjtu_logo.png" alt="交大">' +
-        '<div class="plan-top-title">上海交通大学终身教育学院 — 定制培训方案</div>' +
+        '<div class="plan-top-title">终身教育学院 — 定制培训方案</div>' +
       '</div>' +
       '<div class="plan-top-right">' +
         '<button class="plan-cmd" id="copyBtn">📋 复制</button>' +
@@ -787,12 +787,12 @@ function buildPlan(clientType, clientName, projectName, duration, budget, needs,
       '</div>' +
     '</div>' +
     '<div class="plan-body" id="planBody">' +
-      '<h2>上海交通大学终身教育学院「' + clientName + '」定制化培训方案</h2>' +
+      '<h2>终身教育学院「' + clientName + '」定制化培训方案</h2>' +
       '<p style="text-align:center;color:#888;font-size:11.5px;">方案编号：SJTU-CEP-' + String(Date.now()).slice(-6) + ' | 生成日期：' + today + ' | 培训人数：' + people + '人 | 预排时间：' + schedule + '</p>' +
 
       '<h3>一、项目背景分析</h3>' +
       '<p>结合国家关于<span class="hl">' + (clientType === '企业' ? '企业数字化转型与高质量发展' : '干部能力现代化建设与国家治理体系现代化') + '</span>的战略部署，及<span class="hl">' + (clientType === '企业' ? '全球产业变革与企业创新升级' : '长三角一体化与区域协调发展') + '</span>的时代背景，贵单位提出本次培训恰逢其时。</p>' +
-      '<p>上海交通大学终身教育学院传承交大百廿薪火，坚持"立德树人"根本任务，依托学校优势学科，对标国际名校，整合<span class="hl">国际关系学院、安泰经济与管理学院、电子信息学院、马克思主义学院</span>等院系资源，以及<span class="hl">全球创新研究院</span>的前沿研究成果，为贵单位精心打造本次高端研修项目。</p>' +
+      '<p>终身教育学院传承交大百廿薪火，坚持"立德树人"根本任务，依托学校优势学科，对标国际名校，整合<span class="hl">国际关系学院、安泰经济与管理学院、电子信息学院、马克思主义学院</span>等院系资源，以及<span class="hl">全球创新研究院</span>的前沿研究成果，为贵单位精心打造本次高端研修项目。</p>' +
       '<p><em>培训特色：学科交叉 · 校企融汇 · 中外汇通 · 产学结合 · 定制培养</em></p>' +
 
       '<h3>二、培训目标设定</h3>' +
@@ -857,7 +857,7 @@ function buildPlan(clientType, clientName, projectName, duration, budget, needs,
         '<li>覆盖<span class="hl">全国30+省市区县</span>的干部培训成功经验</li>' +
       '</ul>' +
       '<p>助力贵单位人才培养与能力建设，实现知识共创、资源共享、发展共赢！</p>' +
-      '<div class="plan-watermark">上海交通大学终身教育学院 · sce.sjtu.edu.cn · 饮水思源 · 爱国荣校</div>' +
+      '<div class="plan-watermark">终身教育学院 · sce.sjtu.edu.cn · 饮水思源 · 爱国荣校</div>' +
     '</div>' +
   '</div>' +
   '<div style="display:flex;gap:7px;margin-top:12px;">' +
@@ -1045,7 +1045,7 @@ function newChat() {
       '<div class="welcome-box">' +
         '<img class="welcome-logo" src="sjtu_logo.png" alt="欢迎">' +
         '<div class="welcome-title">欢迎使用交大智培</div>' +
-        '<div class="welcome-desc">我是上海交通大学终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。</div>' +
+        '<div class="welcome-desc">我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。</div>' +
         '<div class="type-cards">' +
           '<div class="type-card" id="cardParty"><div class="type-card-icon">🏛️</div><div class="type-card-title">党委系统培训</div><div class="type-card-desc">党性教育、治理能力现代化建设</div></div>' +
           '<div class="type-card" id="cardGov"><div class="type-card-icon">🏢</div><div class="type-card-title">政府系统培训</div><div class="type-card-desc">数字政府、基层治理创新</div></div>' +
