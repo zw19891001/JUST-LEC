@@ -2,1141 +2,891 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>交大智培 — 终身教育学院定制培训方案生成系统</title>
-<meta name="description" content="终身教育学院官方AI定制培训方案生成助手">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>一成智培 — 定制化培训方案智能生成系统</title>
+<meta name="description" content="一成智培官方定制培训方案智能生成系统">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #003A6E;
-    --navy-dark: #00264F;
-    --navy-light: #005A9E;
-    --gold: #C4922A;
-    --gold-light: #E0B84D;
-    --cream: #F7F4EF;
-    --gray: #5A6472;
-    --light-gray: #E8EBF0;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; overflow: hidden; }
-  body { font-family: 'Noto Sans SC', sans-serif; background: var(--cream); color: #1a1a2e; }
+:root{--p:#7A5C3E;--pl:#9A7450;--a:#B8860B;--al:#D4A843;--c:#F8F4EE;--d:#2D4A3E;--gray:#5A4A3A;--lg:#E8DDD0;--n:#1a1a2e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:"Noto Sans SC",sans-serif;background:var(--c);color:var(--n)}
+.app{display:grid;grid-template-columns:320px 1fr 380px;height:100vh}
 
-  /* ===== 整体布局 ===== */
-  .app-shell { display: grid; grid-template-columns: 280px 1fr 380px; height: 100vh; position: relative; z-index: 1; }
+/* === 左侧边栏 === */
+.left{background:linear-gradient(180deg,#2D4A3E,#1C3830);color:#fff;display:flex;flex-direction:column;overflow:hidden}
+.lh{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.lr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.lb{width:52px;height:52px;background:linear-gradient(135deg,#B8860B,#D4A843);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:15px;font-weight:900;color:#fff;border:1px solid rgba(255,255,255,.2);flex-shrink:0;letter-spacing:1px}
+.sn{font-family:"Noto Serif SC",serif;font-size:14px;font-weight:700;line-height:1.4;color:#fff}
+.se{font-size:8.5px;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.5px}
+.badge{padding:2px 8px;background:rgba(184,134,11,.2);border:1px solid rgba(184,134,11,.5);color:#D4A843;font-size:9px;border-radius:20px;margin-top:8px;display:inline-block;letter-spacing:.5px}
+.bn{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;margin-top:14px;transition:background .2s;font-family:"Noto Sans SC",sans-serif}
+.bn:hover{background:rgba(255,255,255,.18)}
+.hi{flex:1;overflow-y:auto;padding:14px 12px}
+.hl2{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.3);padding:0 6px;margin-bottom:8px}
+.ha{padding:9px 12px;border-radius:8px;font-size:12px;color:rgba(255,255,255,.65);cursor:pointer;margin-bottom:2px;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ha:hover,.ha.on{background:rgba(255,255,255,.1)}
+.ha.on{color:#D4A843;border-left:2px solid #B8860B}
+.hi::-webkit-scrollbar{width:3px}
+.hi::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2)}
+.lf{padding:12px 18px;border-top:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.mt{font-size:10px;color:rgba(255,255,255,.35);font-family:"Noto Serif SC",serif;letter-spacing:2px;margin-bottom:4px}
+.ft{font-size:10px;color:rgba(255,255,255,.28);line-height:1.6}
 
-  /* ===== 左侧 ===== */
-  .sidebar { background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%); color: white; display: flex; flex-direction: column; overflow: hidden; }
-  .sidebar-top { padding: 18px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .sidebar-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .sidebar-logo-img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; border-radius: 6px; cursor: pointer; transition: transform 0.2s; }
-  .sidebar-logo-img:hover { transform: scale(1.05); }
-  .sidebar-school-name { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; color: white; line-height: 1.4; }
-  .sidebar-school-en { font-size: 8.5px; color: rgba(255,255,255,0.55); letter-spacing: 0.5px; margin-top: 3px; }
-  .system-badge { display: inline-block; background: rgba(196,146,42,0.2); border: 1px solid rgba(196,146,42,0.5); color: var(--gold-light); font-size: 9px; padding: 2px 8px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.5px; }
-  .new-chat-btn { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); color: white; padding: 9px 14px; border-radius: 10px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-top: 12px; transition: background 0.2s; }
-  .new-chat-btn:hover { background: rgba(255,255,255,0.18); }
-  .history-section { flex: 1; overflow-y: auto; padding: 14px 12px; }
-  .history-section::-webkit-scrollbar { width: 3px; }
-  .history-section::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
-  .history-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); padding: 0 6px; margin-bottom: 8px; }
-  .history-item { padding: 9px 12px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 2px; cursor: pointer; transition: all 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .history-item:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
-  .history-item.active { background: rgba(196,146,42,0.2); color: var(--gold-light); border-left: 2px solid var(--gold); }
-  .sidebar-bottom { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-  .motto { font-size: 10px; color: rgba(255,255,255,0.35); font-family: 'Noto Serif SC', serif; letter-spacing: 2px; margin-bottom: 5px; }
-  .footer-text { font-size: 10px; color: rgba(255,255,255,0.28); line-height: 1.6; }
+/* === 中间主区 === */
+.mid{flex-direction:column;background:var(--c);display:flex;overflow:hidden}
+.mh{padding:16px 24px;background:#fff;border-bottom:1px solid var(--lg);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.he{display:flex;align-items:center;gap:12px}
+.hg{width:44px;height:44px;background:linear-gradient(135deg,#B8860B,#D4A843);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:12px;font-weight:900;color:#fff}
+.ht{font-family:"Noto Serif SC",serif;font-size:18px;font-weight:700;color:var(--d)}
+.hs{font-size:12px;color:var(--gray);margin-top:2px}
+.ac{display:flex;gap:6px}
+.ab{background:#fff;border:1px solid var(--lg);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;transition:all .2s;font-family:"Noto Sans SC",sans-serif;white-space:nowrap}
+.ab:hover{border-color:var(--pl);color:var(--p)}
+.abp{background:var(--d);color:#fff;border-color:var(--d)}
+.abp:hover{background:#3a5a4e}
+.ms{flex:1;overflow-y:auto;padding:24px 28px}
+.ms::-webkit-scrollbar{width:5px}
+.ms::-webkit-scrollbar-thumb{background:rgba(45,74,62,.12);border-radius:3px}
 
-  /* ===== 中间 ===== */
-  .chat-area { display: flex; flex-direction: column; background: var(--cream); overflow: hidden; }
-  .chat-header { padding: 16px 24px; background: white; border-bottom: 1px solid var(--light-gray); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .header-logo { width: 48px; height: 48px; object-fit: contain; border-radius: 6px; cursor: pointer; transition: transform 0.2s; }
-  .header-logo:hover { transform: scale(1.06); }
-  .header-title { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 700; color: var(--navy); }
-  .header-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
-  .header-right { display: flex; gap: 6px; }
-  .action-btn { background: white; border: 1px solid var(--light-gray); color: var(--gray); padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-  .action-btn:hover { border-color: var(--navy-light); color: var(--navy); }
-  .action-btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
-  .action-btn.primary:hover { background: var(--navy-light); }
+/* === 欢迎页 === */
+.wp{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px 24px}
+.wlg{width:88px;height:88px;background:linear-gradient(135deg,#2D4A3E,#3a5a4e);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:24px;font-weight:900;color:#fff;margin-bottom:20px;box-shadow:0 8px 32px rgba(45,74,62,.25)}
+.wt{font-family:"Noto Serif SC",serif;font-size:28px;font-weight:700;color:var(--d);margin-bottom:12px}
+.wp p{font-size:15px;color:var(--gray);max-width:540px;line-height:1.9;margin-bottom:28px}
+.tc{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;max-width:620px}
+.tc2{background:#fff;border:1.5px solid var(--lg);border-radius:14px;padding:16px 18px;width:185px;text-align:left;cursor:pointer;transition:all .2s}
+.tc2:hover{border-color:var(--pl);box-shadow:0 6px 24px rgba(122,92,62,.12);transform:translateY(-2px)}
+.tci{font-size:28px;margin-bottom:10px}
+.tct{font-size:13px;font-weight:700;color:var(--d);margin-bottom:4px}
+.tcd{font-size:11px;color:var(--gray);line-height:1.5}
+.qb{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.qb2{background:#fff;border:1.5px solid var(--lg);color:var(--d);padding:9px 16px;border-radius:24px;font-size:13px;cursor:pointer;transition:all .2s;font-family:"Noto Sans SC",sans-serif}
+.qb2:hover{border-color:var(--d);background:var(--d);color:#fff}
 
-  .messages-scroll { flex: 1; overflow-y: auto; padding: 20px 28px; }
-  .messages-scroll::-webkit-scrollbar { width: 5px; }
-  .messages-scroll::-webkit-scrollbar-thumb { background: rgba(0,58,110,0.12); border-radius: 3px; }
+/* === 对话气泡 === */
+.mg{display:flex;gap:12px;margin-bottom:18px}
+.mgr{display:flex;flex-direction:row-reverse;gap:12px;margin-bottom:18px}
+.mav{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:11px;font-weight:700;color:#fff}
+.mavai{background:linear-gradient(135deg,#2D4A3E,#3a5a4e)}
+.mavus{background:linear-gradient(135deg,#B8860B,#D4A843)}
+.bw{max-width:68%;display:flex;flex-direction:column;gap:3px}
+.mgr .bw{align-items:flex-end}
+.bb{padding:13px 17px;border-radius:14px;font-size:14px;line-height:1.8}
+.bbai{background:#fff;border:1px solid var(--lg);border-top-left-radius:3px;color:#2a2a3a}
+.bbus{background:linear-gradient(135deg,#2D4A3E,#3a5a4e);color:#fff;border-top-right-radius:3px}
+.tm{font-size:10.5px;color:rgba(0,0,0,.3);padding:0 4px}
+.mgr .tm{text-align:right}
 
-  /* 欢迎页 */
-  .welcome-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px 24px; }
-  .welcome-logo { width: 96px; height: 96px; object-fit: contain; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,58,110,0.15); }
-  .welcome-title { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
-  .welcome-desc { font-size: 14.5px; color: var(--gray); max-width: 540px; line-height: 1.9; margin-bottom: 28px; }
+/* === 方案卡片 === */
+.pw{background:#fff;border:1px solid var(--lg);border-radius:14px;overflow:hidden;margin-top:8px}
+.pt{background:linear-gradient(135deg,#2D4A3E,#1C3830);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.ptl{display:flex;align-items:center;gap:10px}
+.pb2{width:30px;height:30px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:10px;font-weight:700;color:#fff}
+.pbb{font-family:"Noto Serif SC",serif;font-size:14px;font-weight:600}
+.pbz{display:flex;gap:6px}
+.pbt{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:5px 11px;border-radius:6px;font-size:11.5px;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:4px;font-family:"Noto Sans SC",sans-serif}
+.pbt:hover{background:rgba(255,255,255,.25)}
+.pby{padding:20px 24px;max-height:60vh;overflow-y:auto;font-size:13.5px;line-height:1.85;color:#333}
+.pby::-webkit-scrollbar{width:4px}
+.pby::-webkit-scrollbar-thumb{background:rgba(45,74,62,.1)}
+.pby h2{font-family:"Noto Serif SC",serif;color:#2D4A3E;font-size:16px;margin:16px 0 10px;padding-bottom:8px;border-bottom:2px solid #2D4A3E;text-align:center}
+.pby h2:first-child{margin-top:0}
+.pby h3{font-family:"Noto Serif SC",serif;color:#2D4A3E;font-size:15px;margin:16px 0 9px;padding-bottom:5px;border-bottom:1.5px solid #2D4A3E}
+.pby h4{color:#3a5a4e;font-size:13.5px;margin:12px 0 7px}
+.pby p{margin-bottom:9px;color:#444}
+.pby table{width:100%;border-collapse:collapse;margin:9px 0 13px;font-size:12.5px}
+.pby th{background:#2D4A3E;color:#fff;padding:7px 11px;text-align:left;font-size:12px}
+.pby td{padding:6px 11px;border:1px solid var(--lg)}
+.pby tr:nth-child(even) td{background:#f8f9fc}
+.pby ul{padding-left:20px;margin-bottom:9px}
+.pby li{margin-bottom:4px;color:#444}
+.hl2{color:#B8860B;font-weight:600}
+.pwm{text-align:center;font-size:10px;color:rgba(45,74,62,.25);font-family:"Noto Serif SC",serif;letter-spacing:2px;padding:8px;background:#f8f9fc;border-top:1px solid var(--lg)}
+.paz{display:flex;gap:7px;margin-top:12px}
 
-  .type-cards { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; max-width: 620px; }
-  .type-card { background: white; border: 1.5px solid var(--light-gray); border-radius: 14px; padding: 16px 18px; text-align: left; width: 185px; cursor: pointer; transition: all 0.2s; }
-  .type-card:hover { border-color: var(--navy); box-shadow: 0 6px 24px rgba(0,58,110,0.12); transform: translateY(-2px); }
-  .type-card-icon { font-size: 28px; margin-bottom: 10px; }
-  .type-card-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .type-card-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+/* === 输入区 === */
+.iz{padding:14px 20px 18px;background:#fff;border-top:1px solid var(--lg);flex-shrink:0}
+.ib{display:flex;align-items:flex-end;gap:8px;background:#f5f4ef;border:1.5px solid transparent;border-radius:12px;padding:9px 12px;transition:all .2s}
+.ib:focus-within{border-color:#9A7450;background:#fff;box-shadow:0 0 0 3px rgba(122,92,62,.08)}
+.it{width:100%;border:none;outline:none;background:transparent;font-size:14px;font-family:"Noto Sans SC",sans-serif;color:#1a1a2e;resize:none;line-height:1.6;max-height:120px}
+.it::placeholder{color:#bbb}
+.sb2{width:38px;height:38px;background:linear-gradient(135deg,#2D4A3E,#3a5a4e);border:none;border-radius:9px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.sb2:hover{transform:scale(1.05);box-shadow:0 4px 14px rgba(45,74,62,.3)}
+.sb2:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-  .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 560px; }
-  .quick-btn { background: white; border: 1.5px solid var(--light-gray); color: var(--navy); padding: 9px 16px; border-radius: 24px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: all 0.2s; }
-  .quick-btn:hover { border-color: var(--navy); background: var(--navy); color: white; }
+/* === 右侧面板 === */
+.right{background:#fff;border-left:1px solid var(--lg);display:flex;flex-direction:column;overflow:hidden}
+.tbs{display:flex;border-bottom:1px solid var(--lg);flex-shrink:0}
+.tb{flex:1;padding:13px 8px;text-align:center;font-size:12.5px;color:var(--gray);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:"Noto Sans SC",sans-serif}
+.tbon{color:#2D4A3E;border-bottom-color:#2D4A3E;font-weight:600}
+.tbb{flex:1;overflow-y:auto;padding:14px}
+.tbb::-webkit-scrollbar{width:4px}
+.tbb::-webkit-scrollbar-thumb{background:rgba(45,74,62,.1)}
+.sb3{display:flex;gap:5px;margin-bottom:16px}
+.sp{height:3px;flex:1;background:var(--lg);border-radius:2px;transition:all .3s}
+.spon{background:#D4A843}
+.sdone{background:#2D4A3E}
+.fb{margin-bottom:13px}
+.fl{font-size:11.5px;font-weight:600;color:#2D4A3E;margin-bottom:5px;display:block}
+.fi,.fs,.fa{width:100%;padding:8px 11px;border:1.5px solid var(--lg);border-radius:8px;font-size:12.5px;font-family:"Noto Sans SC",sans-serif;color:#1a1a2e;background:#fafbfc;transition:all .2s;outline:none}
+.fi:focus,.fs:focus,.fa:focus{border-color:#9A7450;background:#fff;box-shadow:0 0 0 3px rgba(122,92,62,.07)}
+.fa{resize:vertical;min-height:56px}
+.fr{display:flex;gap:7px;margin-top:12px}
+.fc2{flex:1;padding:9px 6px;border:1.5px solid var(--lg);border-radius:9px;text-align:center;cursor:pointer;transition:all .2s;font-size:11.5px;color:var(--gray)}
+.fc2:hover{border-color:#9A7450;color:#7A5C3E}
+.fcon{border-color:#2D4A3E;background:#f0f4ff;color:#2D4A3E;font-weight:600}
+.fci{font-size:18px;margin-bottom:3px}
+.gb{width:100%;background:linear-gradient(135deg,#2D4A3E,#3a5a4e);color:#fff;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:"Noto Sans SC",sans-serif;transition:all .2s;margin-top:14px}
+.gb:hover{box-shadow:0 6px 20px rgba(45,74,62,.3);transform:translateY(-1px)}
+.gb:active{transform:translateY(0)}
+.pn{font-size:10px;color:var(--gray);text-align:center;margin-top:9px;line-height:1.6}
 
-  /* 消息 */
-  .msg { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; }
-  .msg-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; object-fit: contain; }
-  .msg-right { max-width: 68%; display: flex; flex-direction: column; gap: 3px; }
-  .msg-bubble { padding: 13px 17px; border-radius: 14px; font-size: 14px; line-height: 1.8; }
-  .msg-ai .msg-bubble { background: white; border: 1px solid var(--light-gray); border-top-left-radius: 3px; color: #2a2a3a; }
-  .msg-user { flex-direction: row-reverse; }
-  .msg-user .msg-right { align-items: flex-end; }
-  .msg-user .msg-bubble { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: white; border-top-right-radius: 3px; }
-  .msg-time { font-size: 10.5px; color: rgba(0,0,0,0.3); padding: 0 4px; }
+/* === 知识库卡片 === */
+.kb{margin-bottom:16px}
+.kh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.kt{font-size:12px;font-weight:700;color:#2D4A3E;display:flex;align-items:center;gap:5px}
+.kn{background:#2D4A3E;color:#fff;font-size:9.5px;padding:1px 6px;border-radius:10px}
+.kd{font-size:10.5px;color:var(--gray);margin-bottom:8px;line-height:1.6}
+.ktg{display:flex;flex-wrap:wrap;gap:4px}
+.kt3{display:inline-block;background:#f0f2f8;border:1px solid #dde3f0;color:#2D4A3E;font-size:10px;padding:2px 7px;border-radius:4px}
+.kt3r{background:#fff8e8;border-color:#f0d898;color:#8a6020}
+.kt3g{background:#f0f8f5;border-color:#c0d8d0;color:#2D4A3E}
+.ib3{background:#f0f4ff;border:1px solid #d0d8f0;border-radius:10px;padding:12px;margin-top:12px}
+.it3{font-size:11.5px;font-weight:700;color:#2D4A3E;margin-bottom:5px}
+.ib3 p{font-size:11px;color:var(--gray);line-height:1.7}
 
-  /* 方案 */
-  .plan-box { background: white; border: 1px solid var(--light-gray); border-radius: 14px; overflow: hidden; margin-top: 6px; }
-  .plan-top-bar { background: linear-gradient(135deg, var(--navy), #004580); color: white; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
-  .plan-top-left { display: flex; align-items: center; gap: 10px; }
-  .plan-top-logo { width: 32px; height: 32px; object-fit: contain; }
-  .plan-top-title { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 600; }
-  .plan-top-right { display: flex; gap: 6px; }
-  .plan-cmd { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 5px 11px; border-radius: 6px; font-size: 11.5px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 4px; }
-  .plan-cmd:hover { background: rgba(255,255,255,0.25); }
-  .plan-cmd.copied { background: rgba(46,204,113,0.35); }
-  .plan-body { padding: 20px 24px; max-height: 65vh; overflow-y: auto; font-size: 13.5px; line-height: 1.85; color: #333; }
-  .plan-body::-webkit-scrollbar { width: 4px; }
-  .plan-body::-webkit-scrollbar-thumb { background: rgba(0,58,110,0.1); border-radius: 2px; }
-  .plan-body h2 { font-family: 'Noto Serif SC', serif; color: var(--navy); font-size: 16px; margin: 16px 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); text-align: center; }
-  .plan-body h2:first-child { margin-top: 0; }
-  .plan-body h3 { font-family: 'Noto Serif SC', serif; color: var(--navy); font-size: 15px; margin: 16px 0 9px; padding-bottom: 5px; border-bottom: 1.5px solid var(--navy); }
-  .plan-body h4 { color: var(--navy-light); font-size: 13.5px; margin: 12px 0 7px; }
-  .plan-body p { margin-bottom: 9px; color: #444; }
-  .plan-body table { width: 100%; border-collapse: collapse; margin: 9px 0 13px; font-size: 12.5px; }
-  .plan-body th { background: var(--navy); color: white; padding: 7px 11px; text-align: left; font-size: 12px; }
-  .plan-body td { padding: 6px 11px; border: 1px solid var(--light-gray); }
-  .plan-body tr:nth-child(even) td { background: #f8f9fc; }
-  .plan-body ul { padding-left: 20px; margin-bottom: 9px; }
-  .plan-body li { margin-bottom: 4px; color: #444; }
-  .hl { color: var(--navy); font-weight: 600; }
-  .plan-watermark { text-align: center; font-size: 10px; color: rgba(0,58,110,0.12); font-family: 'Noto Serif SC', serif; letter-spacing: 2px; padding: 8px; background: #f8f9fc; border-top: 1px solid var(--light-gray); }
-
-  /* 输入 */
-  .input-zone { padding: 14px 20px 18px; background: white; border-top: 1px solid var(--light-gray); flex-shrink: 0; }
-  .input-bar { display: flex; align-items: flex-end; gap: 8px; background: #f5f6f9; border: 1.5px solid transparent; border-radius: 12px; padding: 9px 12px; transition: all 0.2s; }
-  .input-bar:focus-within { border-color: var(--navy-light); background: white; box-shadow: 0 0 0 3px rgba(0,90,158,0.08); }
-  .input-text { flex: 1; border: none; outline: none; background: transparent; font-size: 14px; font-family: 'Noto Sans SC', sans-serif; color: #1a1a2e; resize: none; line-height: 1.6; max-height: 120px; }
-  .input-text::placeholder { color: #bbb; }
-  .send-btn { width: 38px; height: 38px; background: linear-gradient(135deg, var(--navy), var(--navy-light)); border: none; border-radius: 9px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
-  .send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgba(0,58,110,0.22); }
-  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-  /* ===== 右侧 ===== */
-  .right-panel { background: white; border-left: 1px solid var(--light-gray); display: flex; flex-direction: column; overflow: hidden; }
-  .panel-tabs { display: flex; border-bottom: 1px solid var(--light-gray); flex-shrink: 0; }
-  .tab-btn { flex: 1; padding: 13px 8px; text-align: center; font-size: 12.5px; color: var(--gray); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; font-family: 'Noto Sans SC', sans-serif; }
-  .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
-  .panel-body { flex: 1; overflow-y: auto; padding: 14px; }
-  .panel-body::-webkit-scrollbar { width: 4px; }
-  .panel-body::-webkit-scrollbar-thumb { background: rgba(0,58,110,0.1); border-radius: 2px; }
-
-  .step-bar { display: flex; gap: 5px; margin-bottom: 16px; }
-  .step-pip { height: 3px; flex: 1; background: var(--light-gray); border-radius: 2px; transition: all 0.3s; }
-  .step-pip.done { background: var(--navy); }
-  .step-pip.active { background: var(--gold); }
-
-  .field-block { margin-bottom: 13px; }
-  .field-label { font-size: 11.5px; font-weight: 600; color: var(--navy); margin-bottom: 5px; display: block; }
-  .field-input, .field-select, .field-area { width: 100%; padding: 8px 11px; border: 1.5px solid var(--light-gray); border-radius: 8px; font-size: 12.5px; font-family: 'Noto Sans SC', sans-serif; color: #1a1a2e; background: #fafbfc; transition: all 0.2s; outline: none; }
-  .field-input:focus, .field-select:focus, .field-area:focus { border-color: var(--navy-light); background: white; box-shadow: 0 0 0 3px rgba(0,90,158,0.07); }
-  .field-area { resize: vertical; min-height: 56px; }
-
-  .gen-btn { width: 100%; background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: white; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans SC', sans-serif; transition: all 0.2s; margin-top: 2px; }
-  .gen-btn:hover { box-shadow: 0 6px 20px rgba(0,58,110,0.22); transform: translateY(-1px); }
-  .gen-btn:active { transform: translateY(0); }
-
-  .fmt-row { display: flex; gap: 7px; margin-top: 12px; }
-  .fmt-card { flex: 1; padding: 9px 6px; border: 1.5px solid var(--light-gray); border-radius: 9px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 11.5px; color: var(--gray); }
-  .fmt-card:hover { border-color: var(--navy-light); color: var(--navy); }
-  .fmt-card.on { border-color: var(--navy); background: #f0f4ff; color: var(--navy); font-weight: 600; }
-  .fmt-icon { font-size: 18px; margin-bottom: 3px; }
-  .panel-note { font-size: 10px; color: var(--gray); text-align: center; margin-top: 9px; line-height: 1.6; }
-
-  /* KB */
-  .kb-block { margin-bottom: 16px; }
-  .kb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-  .kb-ttl { font-size: 12px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 5px; }
-  .kb-num { background: var(--navy); color: white; font-size: 9.5px; padding: 1px 6px; border-radius: 10px; }
-  .kb-desc { font-size: 10.5px; color: var(--gray); margin-bottom: 8px; line-height: 1.6; }
-  .kb-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .kb-tag { display: inline-block; background: #f0f2f8; border: 1px solid #dde3f0; color: var(--navy); font-size: 10px; padding: 2px 7px; border-radius: 4px; cursor: default; }
-  .kb-tag.r { background: #fff0f0; border-color: #f0c0c0; color: #a01020; }
-  .kb-tag.g { background: #fff8e8; border-color: #f0d898; color: #8a6020; }
-
-  .info-box { background: #f0f4ff; border: 1px solid #d0d8f0; border-radius: 10px; padding: 12px; margin-top: 12px; }
-  .info-box-title { font-size: 11.5px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
-  .info-box p { font-size: 11px; color: var(--gray); line-height: 1.7; }
-  .info-box .hl { color: var(--navy); font-weight: 600; }
-
-  /* Toast */
-  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1a2e; color: white; padding: 10px 20px; border-radius: 24px; font-size: 13px; opacity: 0; transition: all 0.3s; z-index: 9999; pointer-events: none; white-space: nowrap; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* 水印 */
-  .bg-wm { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-28deg); font-size: 70px; font-family: 'Noto Serif SC', serif; color: rgba(0,58,110,0.025); pointer-events: none; white-space: nowrap; z-index: 0; user-select: none; }
-
-  /* 打字 */
-  .typing-row { display: flex; gap: 4px; }
-  .tdot { width: 7px; height: 7px; background: var(--navy); border-radius: 50%; opacity: 0.3; animation: td 1.2s ease-in-out infinite; }
-  .tdot:nth(2) { animation-delay: 0.15s; }
-  .tdot:nth(3) { animation-delay: 0.3s; }
-  @keyframes td { 0%,80%,100%{opacity:0.2;transform:translateY(0)} 40%{opacity:1;transform:translateY(-5px)} }
-
-  /* 动画 */
-  @keyframes fa { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  .a-in { animation: fa 0.3s ease-out forwards; }
-
-  @media (max-width: 1024px) { .app-shell { grid-template-columns: 1fr; } .sidebar, .right-panel { display: none !important; } .bg-wm { display: none; } }
-  html,body { overflow: hidden; }
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,58,110,0.12); border-radius: 3px; }
-  ::-webkit-scrollbar-track { background: transparent; }
+/* === 通用 === */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap}
+.toaston{opacity:1;transform:translateX(-50%) translateY(0)}
+.wm{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-28deg);font-size:72px;font-family:"Noto Serif SC",serif;color:rgba(45,74,62,.025);pointer-events:none;white-space:nowrap;z-index:0;user-select:none}
+.td{width:7px;height:7px;background:#2D4A3E;border-radius:50%;opacity:.3;animation:td 1.2s ease-in-out infinite}
+.td:nth-child(2){animation-delay:.15s}
+.td:nth-child(3){animation-delay:.3s}
+@keyframes td{0%,80%,100%{opacity:.2;transform:translateY(0)}40%{opacity:1;transform:translateY(-5px)}}
+@keyframes fa{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ain{animation:fa .3s ease-out}
+@media(max-width:1024px){.app{grid-template-columns:1fr}.left,.right{display:none!important}.wm{display:none}}
 </style>
 </head>
 <body>
-
-<div class="bg-wm">终身教育学院</div>
+<div class="wm">一成智培</div>
 <div class="toast" id="toast"></div>
+<div class="app">
 
-<div class="app-shell">
+<!-- ========== 左侧边栏 ========== -->
+<aside class="left">
+  <div class="lh">
+    <div class="lr">
+      <div class="lb">甘</div>
+      <div>
+        <div class="sn">一成智培<br>智能培训系统</div>
+        <div class="se">GANCHENG ZHIPEI SYSTEM</div>
+        <div class="badge">一成智培 AI</div>
+      </div>
+    </div>
+    <button class="bn" id="btnNew" onclick="newChat()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+      新建对话
+    </button>
+  </div>
 
-  <!-- 左侧 -->
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="sidebar-logo-row">
-        <div style="width:52px;height:52px;background:rgba(196,146,42,0.9);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;border:1px solid rgba(255,255,255,0.2);">终教</div>
-        <div>
-          <div class="sidebar-school-name">终身教育学院</div>
-          <div class="sidebar-school-en">LIFELONG EDUCATION COLLEGE</div>
+  <div class="hi">
+    <div class="hl2">历史记录</div>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="lf">
+    <div class="mt">甘于奉献 · 成己达人</div>
+    <div class="ft">© 一成智培<br>技术支持：一成智培 v1.0</div>
+  </div>
+</aside>
+
+<!-- ========== 中间主区 ========== -->
+<main class="mid">
+  <div class="mh">
+    <div class="he">
+      <div class="hg">甘</div>
+      <div>
+        <div class="ht">一成智培 — 定制培训方案生成</div>
+        <div class="hs">智能化培训方案生成系统</div>
+      </div>
+    </div>
+    <div class="ac">
+      <button class="ab" id="btnExport">📥 导出</button>
+      <button class="ab" id="btnPrint">🖨️ 打印</button>
+    </div>
+  </div>
+
+  <div class="ms" id="msgScroll">
+    <div id="msgList">
+      <div class="wp" id="welcomeBox">
+        <div class="wlg">甘</div>
+        <div class="wt">欢迎使用一成智培</div>
+        <p>我是 <strong>一成智培 AI 定制培训方案生成助手</strong>。依托专业学术资源与行业师资，为您快速生成高质量定制化培训方案。</p>
+        <div class="tc">
+          <div class="tc2" id="cardParty"><div class="tci">🏛️</div><div class="tct">党委/政府系统</div><div class="tcd">党性教育、治理能力建设</div></div>
+          <div class="tc2" id="cardEnterprise"><div class="tci">💼</div><div class="tct">企业内训</div><div class="tcd">战略领导力、数字化转型</div></div>
+          <div class="tc2" id="cardCustom"><div class="tci">🎯</div><div class="tct">定制专题</div><div class="tcd">行业专题、个性化需求</div></div>
+        </div>
+        <div class="qb">
+          <button class="qb2" id="q1">定制干部培训方案</button>
+          <button class="qb2" id="q2">企业管理层内训</button>
+          <button class="qb2" id="q3">数字政府建设专题</button>
+          <button class="qb2" id="q4">修改已有方案</button>
         </div>
       </div>
-      <button class="new-chat-btn" id="newChatBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-        新建对话
+    </div>
+  </div>
+
+  <div class="iz">
+    <div class="ib">
+      <textarea class="it" id="inputTxt" placeholder="输入培训需求或问题...（Enter 发送，Shift+Enter 换行）" rows="1"></textarea>
+      <button class="sb2" id="sendBtn" onclick="sendMsg()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
       </button>
     </div>
-    <div class="history-section">
-      <div class="history-label">历史记录</div>
-      <div id="historyList"></div>
-    </div>
-    <div class="sidebar-bottom">
-      <div class="motto">饮水思源 · 爱国荣校</div>
-      <div class="footer-text">© 终身教育学院<br>技术支持：AI 方案生成系统 v2.0</div>
-    </div>
-  </aside>
+  </div>
+</main>
 
-  <!-- 中间 -->
-  <main class="chat-area">
-    <div class="chat-header">
-      <div class="header-left">
-        <div style="width:44px;height:44px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:10px;font-weight:700;color:white;flex-shrink:0;">终教<br><span style="font-size:7px;letter-spacing:0.5px;">学院</span></div>
-        <div>
-          <div class="header-title">交大智培 — 定制培训方案生成</div>
-          <div class="header-sub">终身教育学院官方智能助手</div>
-        </div>
-      </div>
-      <div class="header-right">
-        <button class="action-btn" id="exportBtn">📥 导出方案</button>
-        <button class="action-btn" id="printBtn">🖨️ 打印</button>
-      </div>
+<!-- ========== 右侧面板 ========== -->
+<aside class="right">
+  <div class="tbs">
+    <div class="tb tbon" id="tabForm" onclick="(function(){document.getElementById('tabForm').className='tb tbon';document.getElementById('tabKB').className='tb';document.getElementById('panelForm').style.display='block';document.getElementById('panelKB').style.display='none'})()">📋 需求表单</div>
+    <div class="tb" id="tabKB" onclick="(function(){document.getElementById('tabKB').className='tb tbon';document.getElementById('tabForm').className='tb';document.getElementById('panelKB').style.display='block';document.getElementById('panelForm').style.display='none'})()">📚 知识库</div>
+  </div>
+
+  <!-- 需求表单 -->
+  <div class="tbb" id="panelForm">
+    <div class="sb3">
+      <div class="sp spon" id="s1"></div>
+      <div class="sp" id="s2"></div>
+      <div class="sp" id="s3"></div>
+      <div class="sp" id="s4"></div>
     </div>
 
-    <div class="messages-scroll" id="msgScroll">
-      <div id="msgContainer">
-        <!-- 欢迎页 -->
-        <div id="welcomePage">
-          <div class="welcome-box">
-            <div style="width:88px;height:88px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:22px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 32px rgba(0,58,110,0.2);">终教<br><span style="font-size:11px;letter-spacing:1px;">学院</span></div>
-            <div class="welcome-title">欢迎使用交大智培</div>
-            <div class="welcome-desc">
-              我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>
-              依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。
-            </div>
-            <div class="type-cards">
-              <div class="type-card" id="cardParty">
-                <div class="type-card-icon">🏛️</div>
-                <div class="type-card-title">党委系统培训</div>
-                <div class="type-card-desc">党性教育、治理能力现代化建设</div>
-              </div>
-              <div class="type-card" id="cardGov">
-                <div class="type-card-icon">🏢</div>
-                <div class="type-card-title">政府系统培训</div>
-                <div class="type-card-desc">数字政府、基层治理创新</div>
-              </div>
-              <div class="type-card" id="cardEnt">
-                <div class="type-card-icon">💼</div>
-                <div class="type-card-title">企业内训</div>
-                <div class="type-card-desc">战略领导力、数字化转型</div>
-              </div>
-            </div>
-            <div class="quick-btns">
-              <button class="quick-btn" id="q1">我需要定制干部培训方案</button>
-              <button class="quick-btn" id="q2">国企中高层领导力内训</button>
-              <button class="quick-btn" id="q3">数字政府建设专题培训班</button>
-              <button class="quick-btn" id="q4">修改已有方案</button>
-            </div>
-          </div>
-        </div>
+    <div class="fb"><label class="fl">客户类型 *</label>
+      <select class="fs" id="fType">
+        <option value="">— 请选择 —</option>
+        <option value="党委">党委系统领导干部</option>
+        <option value="政府">政府系统领导干部</option>
+        <option value="企业">企业内训</option>
+      </select>
+    </div>
+
+    <div class="fb"><label class="fl">客户单位名称 *</label>
+      <input class="fi" id="fName" placeholder="例如：某省、市、县（区）委组织部">
+    </div>
+
+    <div class="fb"><label class="fl">培训项目名称</label>
+      <input class="fi" id="fProject" placeholder="例如：2026年度领导干部能力提升研修班">
+    </div>
+
+    <div class="fb"><label class="fl">培训人数</label>
+      <input class="fi" id="fPeople" placeholder="例如：50人">
+    </div>
+
+    <div class="fb"><label class="fl">培训时长</label>
+      <select class="fs" id="fDuration">
+        <option value="">— 请选择 —</option>
+        <option value="3天">3天</option>
+        <option value="5天">5天（推荐）</option>
+        <option value="7天">7天</option>
+        <option value="10天">10天</option>
+        <option value="14天">14天</option>
+        <option value="定制">自定义时长</option>
+      </select>
+    </div>
+
+    <div class="fb"><label class="fl">人均预算</label>
+      <select class="fs" id="fBudget">
+        <option value="">— 请选择 —</option>
+        <option value="5000-8000">¥5,000 - ¥8,000（标准）</option>
+        <option value="8000-15000">¥8,000 - ¥15,000（品质）</option>
+        <option value="15000-30000">¥15,000 - ¥30,000（高端）</option>
+        <option value="30000+">¥30,000+（定制）</option>
+      </select>
+    </div>
+
+    <div class="fb"><label class="fl">核心需求与痛点</label>
+      <textarea class="fa" id="fNeeds" placeholder="请描述培训的核心需求、期望解决的问题、学员特点等..."></textarea>
+    </div>
+
+    <div class="fb"><label class="fl">期望培训时间</label>
+      <input class="fi" id="fTime" placeholder="例如：2026年5-6月">
+    </div>
+
+    <div class="fl" style="margin-bottom:6px;">输出格式</div>
+    <div class="fr">
+      <div class="fc2 fcon" id="fmtA" onclick="(function(){window.selectedFmt='A';document.getElementById('fmtA').className='fc2 fcon';document.getElementById('fmtB').className='fc2'})()"><div class="fci">📄</div><div>完整方案</div></div>
+      <div class="fc2" id="fmtB" onclick="(function(){window.selectedFmt='B';document.getElementById('fmtB').className='fc2 fcon';document.getElementById('fmtA').className='fc2'})()"><div class="fci">📊</div><div>PPT大纲</div></div>
+    </div>
+
+    <button class="gb" id="genBtn" onclick="genPlan()">🚀 一键生成定制培训方案</button>
+    <div class="pn">请填写客户类型与单位名称<br>方案生成约需 5-15 秒</div>
+  </div>
+
+  <!-- 知识库 -->
+  <div class="tbb" id="panelKB" style="display:none">
+    <div class="kb">
+      <div class="kh"><div class="kt">🎓 课程资源库 <span class="kn">200+门</span></div></div>
+      <div class="kd">涵盖政治、经济、管理、科技、文化等核心领域</div>
+      <div class="ktg">
+        <span class="kt3 kt3r">习近平新时代中国特色社会主义思想</span>
+        <span class="kt3 kt3r">党的创新理论与党性教育</span>
+        <span class="kt3">数字政府与智慧城市</span>
+        <span class="kt3">宏观形势与政策分析</span>
+        <span class="kt3">治理能力现代化</span>
+        <span class="kt3">公共管理与服务创新</span>
+        <span class="kt3">突发事件应急管理</span>
+        <span class="kt3">乡村振兴战略</span>
+        <span class="kt3">长三角一体化发展</span>
+        <span class="kt3">企业战略与商业模式</span>
+        <span class="kt3">数字化转型与AI应用</span>
+        <span class="kt3">ESG与可持续发展</span>
+        <span class="kt3 kt3g">+ 180+ 更多精品课程</span>
       </div>
     </div>
 
-    <div class="input-zone">
-      <div class="input-bar">
-        <textarea class="input-text" id="inputText" placeholder="输入培训需求或问题...（Enter 发送，Shift+Enter 换行）" rows="1"></textarea>
-        <button class="send-btn" id="sendBtn">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
-        </button>
+    <div class="kb">
+      <div class="kh"><div class="kt">👨‍🏫 师资资源池 <span class="kn">500+位</span></div></div>
+      <div class="kd">资深教授博导 + 党政机关专家 + 行业高管三方构成</div>
+      <div class="ktg">
+        <span class="kt3">国际关系学院教授</span>
+        <span class="kt3">经济与管理学院</span>
+        <span class="kt3">电子信息学院</span>
+        <span class="kt3">马克思主义学院</span>
+        <span class="kt3">政府政策专家</span>
+        <span class="kt3">行业龙头企业高管</span>
+        <span class="kt3 kt3g">+ 490+ 更多师资</span>
       </div>
     </div>
-  </main>
 
-  <!-- 右侧 -->
-  <aside class="right-panel">
-    <div class="panel-tabs">
-      <div class="tab-btn active" id="tabForm">📋 需求表单</div>
-      <div class="tab-btn" id="tabKB">📚 学院资源</div>
+    <div class="kb">
+      <div class="kh"><div class="kt">🗺️ 现场教学基地 <span class="kn">50+个</span></div></div>
+      <div class="kd">上海及长三角地区优质实践教学资源</div>
+      <div class="ktg">
+        <span class="kt3 kt3r">浦东开发开放陈列馆</span>
+        <span class="kt3">张江科学城展示厅</span>
+        <span class="kt3">长三角一体化示范区</span>
+        <span class="kt3">中共一大会址纪念馆</span>
+        <span class="kt3">中国商飞集团</span>
+        <span class="kt3">特斯拉超级工厂</span>
+        <span class="kt3">上海自贸区临港新片区</span>
+        <span class="kt3 kt3g">+ 40+ 更多教学点</span>
+      </div>
     </div>
 
-    <!-- 表单页 -->
-    <div class="panel-body" id="panelForm">
-      <div class="step-bar">
-        <div class="step-pip active" id="p1"></div>
-        <div class="step-pip" id="p2"></div>
-        <div class="step-pip" id="p3"></div>
-        <div class="step-pip" id="p4"></div>
-      </div>
-
-      <div class="field-block">
-        <label class="field-label">客户类型 *</label>
-        <select class="field-select" id="fClientType">
-          <option value="">— 请选择 —</option>
-          <option value="党委">党委系统领导干部</option>
-          <option value="政府">政府系统领导干部</option>
-          <option value="企业">企业内训</option>
-        </select>
-      </div>
-      <div class="field-block">
-        <label class="field-label">客户单位名称 *</label>
-        <input class="field-input" id="fClientName" placeholder="例如：上海市徐汇区区委组织部">
-      </div>
-      <div class="field-block">
-        <label class="field-label">培训项目名称</label>
-        <input class="field-input" id="fProjectName" placeholder="例如：2026年度领导干部能力提升研修班">
-      </div>
-      <div class="field-block">
-        <label class="field-label">培训人数</label>
-        <input class="field-input" id="fPeople" placeholder="例如：50人">
-      </div>
-      <div class="field-block">
-        <label class="field-label">培训时长</label>
-        <select class="field-select" id="fDuration">
-          <option value="">— 请选择 —</option>
-          <option value="3天">3天</option>
-          <option value="5天">5天（推荐）</option>
-          <option value="7天">7天</option>
-          <option value="10天">10天</option>
-          <option value="14天">14天</option>
-          <option value="定制">自定义时长</option>
-        </select>
-      </div>
-      <div class="field-block">
-        <label class="field-label">人均预算</label>
-        <select class="field-select" id="fBudget">
-          <option value="">— 请选择 —</option>
-          <option value="5000-8000">¥5,000 - ¥8,000（标准）</option>
-          <option value="8000-15000">¥8,000 - ¥15,000（品质）</option>
-          <option value="15000-30000">¥15,000 - ¥30,000（高端）</option>
-          <option value="30000+">¥30,000+（定制）</option>
-        </select>
-      </div>
-      <div class="field-block">
-        <label class="field-label">核心需求与痛点</label>
-        <textarea class="field-area" id="fNeeds" placeholder="请描述培训的核心需求、期望解决的问题、学员特点等..."></textarea>
-      </div>
-      <div class="field-block">
-        <label class="field-label">期望培训时间</label>
-        <input class="field-input" id="fSchedule" placeholder="例如：2026年5-6月">
-      </div>
-
-      <div class="field-label" style="margin-bottom:6px;">输出格式</div>
-      <div class="fmt-row">
-        <div class="fmt-card on" id="fmtA" data-fmt="A">
-          <div class="fmt-icon">📄</div>
-          <div>完整方案</div>
-        </div>
-        <div class="fmt-card" id="fmtB" data-fmt="B">
-          <div class="fmt-icon">📊</div>
-          <div>PPT大纲</div>
-        </div>
-      </div>
-
-      <button class="gen-btn" id="genBtn" style="margin-top:14px;">🚀 一键生成定制培训方案</button>
-      <div class="panel-note">方案生成约需 10-30 秒 · 请确保填写必填项</div>
-    </div>
-
-    <!-- 知识库页 -->
-    <div class="panel-body" id="panelKB" style="display:none;">
-      <div class="kb-block">
-        <div class="kb-head">
-          <div class="kb-ttl">🎓 课程资源库 <span class="kb-num">200+门</span></div>
-        </div>
-        <div class="kb-desc">涵盖政治、经济、管理、科技、文化等核心领域</div>
-        <div class="kb-tags">
-          <span class="kb-tag r">习近平新时代中国特色社会主义思想</span>
-          <span class="kb-tag r">党的创新理论与党性教育</span>
-          <span class="kb-tag">数字政府与智慧城市</span>
-          <span class="kb-tag">宏观形势与政策分析</span>
-          <span class="kb-tag">治理能力现代化</span>
-          <span class="kb-tag">公共管理与服务创新</span>
-          <span class="kb-tag">突发事件应急管理</span>
-          <span class="kb-tag">乡村振兴战略</span>
-          <span class="kb-tag">长三角一体化发展</span>
-          <span class="kb-tag">企业战略与商业模式</span>
-          <span class="kb-tag">数字化转型与AI应用</span>
-          <span class="kb-tag">ESG与可持续发展</span>
-          <span class="kb-tag g">+ 180+ 更多精品课程</span>
-        </div>
-      </div>
-
-      <div class="kb-block">
-        <div class="kb-head">
-          <div class="kb-ttl">👨‍🏫 师资资源池 <span class="kb-num">500+位</span></div>
-        </div>
-        <div class="kb-desc">三方构成：交大资深教授博导 + 党政机关专家型领导 + 行业领军企业高管</div>
-        <div class="kb-tags">
-          <span class="kb-tag">国际关系学院教授</span>
-          <span class="kb-tag">安泰经济与管理学院</span>
-          <span class="kb-tag">电子信息学院</span>
-          <span class="kb-tag">马克思主义学院</span>
-          <span class="kb-tag">全球创新研究院</span>
-          <span class="kb-tag">上海市政府政策专家</span>
-          <span class="kb-tag">华为/阿里/腾讯高管</span>
-          <span class="kb-tag g">+ 490+ 更多师资</span>
-        </div>
-      </div>
-
-      <div class="kb-block">
-        <div class="kb-head">
-          <div class="kb-ttl">🗺️ 现场教学基地 <span class="kb-num">50+个</span></div>
-        </div>
-        <div class="kb-desc">上海及长三角地区优质实践教学资源</div>
-        <div class="kb-tags">
-          <span class="kb-tag r">浦东开发开放陈列馆</span>
-          <span class="kb-tag">张江科学城展示厅</span>
-          <span class="kb-tag">长三角一体化示范区</span>
-          <span class="kb-tag">中共一大会址纪念馆</span>
-          <span class="kb-tag">中国商飞集团</span>
-          <span class="kb-tag">特斯拉超级工厂</span>
-          <span class="kb-tag">上海自贸区临港新片区</span>
-          <span class="kb-tag">蚂蚁集团/支付宝大厦</span>
-          <span class="kb-tag g">+ 40+ 更多教学点</span>
-        </div>
-      </div>
-
-      <div class="kb-block">
-        <div class="kb-head">
-          <div class="kb-ttl">✅ 成功案例 <span class="kb-num">30+个</span></div>
-        </div>
-        <div class="kb-desc">学院已实施的典型培训项目（部分）</div>
-        <div class="kb-tags">
-          <span class="kb-tag r">安徽省人社厅系列班级</span>
-          <span class="kb-tag r">中国石化高桥石化培训班</span>
-          <span class="kb-tag">河钢集团唐钢线上研修班</span>
-          <span class="kb-tag">东航投资管理能力提升班</span>
-          <span class="kb-tag">中建三局"鸿鹄计划"</span>
-          <span class="kb-tag">山东大学干部专题读书班</span>
-          <span class="kb-tag">人和心理学研修班（多期）</span>
-          <span class="kb-tag">供应链管理与产业创新班</span>
-          <span class="kb-tag g">+ 更多行业案例</span>
-        </div>
-      </div>
-
-      <div class="info-box">
-        <div class="info-box-title">📖 关于学院</div>
-        <p>终身教育学院是终身教育学院直属单位，由原继续教育学院和海外教育学院合并而成。学院主动对接国家战略性新兴产业和前沿领域，成立<span class="hl">"全球创新研究院"</span>，聚焦<span class="hl">产业创新、科技创新、管理创新、设计创新</span>，探索构建多学科融合的"综合性、创新型、国际化"终身教育体系。</p>
-      </div>
-
-      <div class="info-box">
-        <div class="info-box-title">🔗 接入 AI 完整能力</div>
-        <p>当前为演示模式。配置 API Key 后可启用完整 AI 生成逻辑。</p>
-        <p style="margin-top:6px;"><span class="hl">推荐：</span>硅基流动(SiliconFlow) / DeepSeek / 阿里云百炼</p>
+    <div class="kb">
+      <div class="kh"><div class="kt">✅ 成功案例 <span class="kn">30+个</span></div></div>
+      <div class="kd">已实施的典型培训项目（部分）</div>
+      <div class="ktg">
+        <span class="kt3 kt3r">安徽省人社厅系列班级</span>
+        <span class="kt3 kt3r">某央企集团高管培训班</span>
+        <span class="kt3">某省组织部青年干部班</span>
+        <span class="kt3">上市公司高管研修班</span>
+        <span class="kt3 kt3g">+ 更多行业案例</span>
       </div>
     </div>
-  </aside>
+
+    <div class="ib3">
+      <div class="it3">📖 关于一成智培</div>
+      <p>一成智培致力于为各类组织提供<span class="hl2">专业化、定制化</span>的培训解决方案。平台整合国内外优质师资与课程资源，为您量身打造高效、实用的培训项目。</p>
+    </div>
+
+    <div class="ib3">
+      <div class="it3">🔗 AI 能力接入</div>
+      <p>当前为预设模板模式。配置 API Key 后可启用完整 AI 智能生成。</p>
+      <p style="margin-top:6px;"><span class="hl2">推荐：</span>阿里云百炼 / 硅基流动 / DeepSeek</p>
+    </div>
+  </div>
+</aside>
+
 </div>
-
-
-</body>
-</html>
-</body>
-</html>
 <script>
-'use strict';
+(function(){
+"use strict";
+window.__errors = [];
+window.onerror = function(m,s,l,c,e){window.__errors.push({m:m,s:s,l:l,c:c});return true};
+window.addEventListener("unhandledrejection",function(e){window.__errors.push({type:"rejection",msg:String(e.reason)});console.error("UNHANDLED REJECTION:",e.reason)});
 
-// ===== 状态 =====
-let conversationHistory = [];
-let currentPlan = null;
-let selectedFormat = 'A';
+var _chatHistory = [];
+var currentPlan = null;
+var selectedFmt = "A";
 
-// ===== 初始化事件绑定 =====
-document.addEventListener('DOMContentLoaded', function() {
-  // 发送
-  document.getElementById('sendBtn').addEventListener('click', sendMessage);
-  document.getElementById('inputText').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-
-  // 新建对话
-  document.getElementById('newChatBtn').addEventListener('click', newChat);
-
-  // 头部按钮
-  document.getElementById('exportBtn').addEventListener('click', exportPlan);
-  document.getElementById('printBtn').addEventListener('click', function() { window.print(); });
-
-
-  // 类型卡片
-  document.getElementById('cardParty').addEventListener('click', function() { quickSelect('党委'); });
-  document.getElementById('cardGov').addEventListener('click', function() { quickSelect('政府'); });
-  document.getElementById('cardEnt').addEventListener('click', function() { quickSelect('企业'); });
-
-  // 快速按钮
-  document.getElementById('q1').addEventListener('click', function() { fillInput('我需要定制一套党委/政府系统领导干部培训方案'); });
-  document.getElementById('q2').addEventListener('click', function() { fillInput('我们是某国企，想做中高层领导力内训定制方案'); });
-  document.getElementById('q3').addEventListener('click', function() { fillInput('请生成一份数字政府建设专题培训班方案'); });
-  document.getElementById('q4').addEventListener('click', function() { fillInput('如何修改已有的方案？'); });
-
-  // 右侧选项卡
-  document.getElementById('tabForm').addEventListener('click', function() { switchTab('form'); });
-  document.getElementById('tabKB').addEventListener('click', function() { switchTab('kb'); });
-
-  // 格式选项
-  document.getElementById('fmtA').addEventListener('click', function() { selectFmt('A'); });
-  document.getElementById('fmtB').addEventListener('click', function() { selectFmt('B'); });
-
-  // 生成
-  document.getElementById('genBtn').addEventListener('click', generatePlan);
-
-  // 自动调整输入框
-  document.getElementById('inputText').addEventListener('input', autoResize);
-
-  loadHistory();
-});
-
-function autoResize() {
-  var t = document.getElementById('inputText');
-  t.style.height = 'auto';
-  t.style.height = Math.min(t.scrollHeight, 120) + 'px';
+function $(id){ return document.getElementById(id); }
+function toast(msg){
+  var t = $("toast");
+  t.textContent = msg;
+  t.className = "toast toaston";
+  setTimeout(function(){ t.className = "toast"; }, 2500);
+}
+function scrollBottom(){
+  var s = $("msgScroll");
+  setTimeout(function(){ s.scrollTop = s.scrollHeight; }, 30);
+}
+function autoResize(){
+  var t = $("inputTxt");
+  t.style.height = "auto";
+  t.style.height = Math.min(t.scrollHeight, 120) + "px";
+}
+function now(){
+  return new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+}
+function esc(s){
+  if(!s) return "";
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ===== 核心 =====
-// ===== API Configuration =====
-const API_KEY = "sk-fb7fa9a2ed264a5fb3aaae80b6682277";
-const API_BASE = "https://dashscope.aliyuncs.com/compatible-mode/v1";
-const MODEL_NAME = "qwen-plus";
-
-async function callAI(messages, maxTokens) {
-  try {
-    var resp = await fetch(API_BASE + "/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: MODEL_NAME,
-        messages: messages,
-        max_tokens: maxTokens || 800,
-        temperature: 0.7
-      })
-    });
-    if (!resp.ok) {
-      var err = await resp.text();
-      throw new Error("API Error " + resp.status + ": " + err);
-    }
-    var data = await resp.json();
-    return data.choices[0].message.content;
-  } catch(e) {
-    console.error("AI call failed:", e);
-    return null;
-  }
+/* ===== 课程模板：政府/党委 ===== */
+function govCourses(d){
+  var h = "";
+  h += "<h4>【核心模块一】党的创新理论与党性教育 &nbsp;("+Math.floor(d*1.5)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>习近平新时代中国特色社会主义思想专题</td><td>系统学习党的创新理论核心要义与实践要求</td><td>马克思主义学院教授</td><td>4</td></tr>";
+  h += "<tr><td>党史学习教育与初心使命</td><td>从党史中汲取智慧力量，坚定理想信念</td><td>市委党校专家</td><td>3</td></tr>";
+  h += "<tr><td>全面从严治党与党风廉政建设</td><td>新时代党建要求与廉政风险防控体系</td><td>纪委/监委专家</td><td>3</td></tr>";
+  h += "<tr><td>树立和践行正确政绩观专题</td><td>习近平总书记关于正确政绩观的重要论述</td><td>党校教授</td><td>2</td></tr></table>";
+  h += "<h4>【核心模块二】宏观形势与政策分析 &nbsp;("+Math.floor(d*1.2)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>当前宏观经济形势研判与应对策略</td><td>国内外经济形势分析，政策走向预测</td><td>经济学院教授</td><td>4</td></tr>";
+  h += "<tr><td>国家战略与区域协调发展</td><td>长三角一体化、粤港澳大湾区等战略解读</td><td>发改委专家</td><td>3</td></tr>";
+  h += "<tr><td>数字中国战略与政府数字化转型</td><td>数字政府建设的顶层设计与实践路径</td><td>数字化专家</td><td>3</td></tr>";
+  h += "<tr><td>一带一路与高水平对外开放</td><td>国际格局变化与对外开放新战略</td><td>国际关系专家</td><td>2</td></tr></table>";
+  h += "<h4>【核心模块三】治理能力现代化 &nbsp;("+Math.floor(d*1.5)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>公共管理与服务创新实践</td><td>提升政务服务效能的路径与方法</td><td>公共管理教授</td><td>4</td></tr>";
+  h += "<tr><td>突发事件应急管理与危机沟通</td><td>突发事件的预警、应对与舆情管理</td><td>应急管理局专家</td><td>3</td></tr>";
+  h += "<tr><td>领导干部法治思维与依法行政</td><td>法治政府建设的核心要求与实践</td><td>法学院教授</td><td>3</td></tr>";
+  h += "<tr><td>领导力与高绩效团队建设</td><td>新时期领导干部能力素质提升路径</td><td>领导力专家</td><td>3</td></tr></table>";
+  h += "<h4>【核心模块四】上海实践与现场教学 &nbsp;("+Math.floor(d)+"学时）</h4>";
+  h += "<table><tr><th>教学点</th><th>教学主题</th><th>形式</th><th>学时</th></tr>";
+  h += "<tr><td>浦东开发开放陈列馆</td><td>改革开放精神与浦东开发经验启示</td><td>现场教学</td><td>3</td></tr>";
+  h += "<tr><td>中共一大会址纪念馆</td><td>党史教育与初心使命再学习</td><td>现场教学</td><td>2</td></tr>";
+  h += "<tr><td>长三角一体化示范区</td><td>区域协同发展的创新实践</td><td>现场考察</td><td>3</td></tr>";
+  h += "<tr><td>张江科学城展示厅</td><td>科技创新与战略性新兴产业布局</td><td>现场教学</td><td>2</td></tr></table>";
+  return h;
 }
 
-
-// ===== 阿里云百炼 Dashscope API =====
-function sendMessage() {
-  var input = document.getElementById('inputText');
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  autoResize();
-  addMsg('user', text);
-  conversationHistory.push({ role: 'user', content: text });
-  showTyping();
-
-  var msgs = conversationHistory.map(function(m) {
-    return { role: m.role, content: m.content };
-  });
-
-  callAI(msgs, 800).then(function(resp) {
-    removeTyping();
-    if (resp) {
-      addMsg('ai', resp);
-      conversationHistory.push({ role: 'ai', content: resp });
-    } else {
-      addMsg('ai', '抱歉，AI服务暂时不可用，请检查网络连接后重试。');
-    }
-    saveHistory();
-    scrollBottom();
-  }).catch(function() {
-    removeTyping();
-    addMsg('ai', '抱歉，AI服务暂时不可用，请稍后重试。');
-    scrollBottom();
-  });
+/* ===== 课程模板：企业 ===== */
+function entCourses(d){
+  var h = "";
+  h += "<h4>【核心模块一】战略与领导力 &nbsp;("+Math.floor(d*1.5)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>企业战略管理与商业模式创新</td><td>从战略规划到战略落地的全链条方法论</td><td>管理学教授</td><td>6</td></tr>";
+  h += "<tr><td>变革领导力与组织韧性建设</td><td>不确定时代的领导力重塑与组织适应力</td><td>领导力专家</td><td>4</td></tr>";
+  h += "<tr><td>公司治理与股权激励机制</td><td>现代企业制度与长效激励机制设计</td><td>金融学院教授</td><td>3</td></tr>";
+  h += "<tr><td>企业文化建设与传承</td><td>企业文化体系构建与可持续发展</td><td>管理学教授</td><td>2</td></tr></table>";
+  h += "<h4>【核心模块二】创新与数字化转型 &nbsp;("+Math.floor(d*1.5)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>数字经济与产业变革趋势</td><td>AI、大数据、云计算驱动的行业变革</td><td>数字经济专家</td><td>4</td></tr>";
+  h += "<tr><td>企业数字化转型实战路径</td><td>从信息化到数智化的转型方法论</td><td>转型专家</td><td>4</td></tr>";
+  h += "<tr><td>科技创新与产业生态构建</td><td>以张江科学城为案例剖析创新生态</td><td>产业研究专家</td><td>3</td></tr>";
+  h += "<tr><td>人工智能时代的商业机遇</td><td>大模型与AIGC在企业中的应用实践</td><td>AI领域专家</td><td>3</td></tr></table>";
+  h += "<h4>【核心模块三】经营管理实务 &nbsp;("+Math.floor(d*1.2)+"学时）</h4>";
+  h += "<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>";
+  h += "<tr><td>财务管理与资本运作</td><td>企业财务决策与投融资策略优化</td><td>金融学院教授</td><td>4</td></tr>";
+  h += "<tr><td>战略性人力资源管理</td><td>人才获取、激励与组织发展体系</td><td>人力资源专家</td><td>3</td></tr>";
+  h += "<tr><td>市场营销与品牌战略</td><td>数字化时代的品牌突围与用户运营</td><td>品牌营销专家</td><td>3</td></tr>";
+  h += "<tr><td>ESG与可持续发展</td><td>ESG理念融入企业战略与实践路径</td><td>可持续专家</td><td>2</td></tr></table>";
+  h += "<h4>【核心模块四】上海标杆企业参访 &nbsp;("+Math.floor(d)+"学时）</h4>";
+  h += "<table><tr><th>参访企业/基地</th><th>看点</th><th>形式</th><th>学时</th></tr>";
+  h += "<tr><td>张江科学城展示厅</td><td>科技创新生态与高新产品研发</td><td>现场教学</td><td>3</td></tr>";
+  h += "<tr><td>中国商飞 / 特斯拉超级工厂</td><td>先进制造与大国重器精神</td><td>现场考察</td><td>3</td></tr>";
+  h += "<tr><td>上海自贸区临港新片区</td><td>制度创新与开放新高地</td><td>座谈交流</td><td>2</td></tr>";
+  h += "<tr><td>头部互联网企业（可定制）</td><td>数字化转型最佳实践分享</td><td>座谈交流</td><td>2</td></tr></table>";
+  return h;
 }
 
-function aiResponse(text) {
-  var t = text.toLowerCase();
-  if (t.includes('党委') || t.includes('政府') || t.includes('干部')) {
-    return '好的！我将为您生成党委/政府系统领导干部定制培训方案。<br><br>终身教育学院依托<span class="hl">国际关系学院、安泰经济与管理学院、马克思主义学院</span>等优势学科资源，积累了<span class="hl">30+省市区县</span>的干部培训经验。<br><br><strong>请补充以下信息：</strong><br>1. 培训人数和时长（建议 5-7 天）<br>2. 人均预算范围<br>3. 核心培训主题方向（如：数字政府、基层治理、乡村振兴等）<br>4. 期望的现场教学安排<br><br>或在右侧填写「需求表单」，一键生成完整方案！';
-  }
-  if (t.includes('企业') || t.includes('内训')) {
-    return '了解！企业内训是学院的传统优势领域。我们已服务过<span class="hl">石化、电力、钢铁、金融、建筑</span>等多个行业的领军企业。<br><br><strong>请提供：</strong><br>1. 企业类型（国企/民企/外企）<br>2. 培训对象层级（中层/高层/骨干）<br>3. 核心主题（战略领导力/数字化转型/创新管理等）<br>4. 是否需要标杆企业参访（张江科学城，商飞集团等）<br><br>填写右侧表单，立即生成专属方案！';
-  }
-  if (t.includes('数字政府')) {
-    return '数字政府建设专题培训是学院的热门项目！<br><br><strong>可供参考的课程模块：</strong><br>• 数字中国战略与智慧城市治理<br>• 大数据与AI驱动的公共服务创新<br>• "一网通办"经验与借鉴<br><br><strong>可安排的现场教学点：</strong><br>• 浦东城市运营中心<br>• 张江科学城展示厅<br>• 长三角一体化示范区<br><br>请告诉我具体单位、人数和预算，立即生成完整方案！';
-  }
-  if (t.includes('修改') || t.includes('调整') || t.includes('重新生成')) {
-    if (currentPlan) {
-      return '好的，请告诉我需要修改的具体内容：<br>• 📝 调整课程模块？<br>• 👨‍🏫 更换师资？<br>• ⏱️ 改变时长？<br>• 💰 修改预算？<br>• 🗺️ 调整现场教学？';
-    } else {
-      return '目前暂无已生成的方案可供修改。请先告诉我您的需求，我会为您生成初始方案，再根据您的意见调整。';
-    }
-  }
-  return '我是<span class="hl">交大智培</span>，终身教育学院的官方 AI 助手。<br><br><strong>我能为您：</strong><br>• 🎯 生成定制培训方案（党委/政府/企业）<br>• 📚 匹配课程模块与师资资源<br>• 💰 提供报价预算参考<br>• 🔄 根据反馈优化方案<br><br>请告诉我您的培训需求，或直接点击上方卡片开始！';
+/* ===== 师资模板 ===== */
+function govTeachers(){
+  var h = "";
+  h += "<tr><td>资深教授博导</td><td>马克思主义学院资深教授</td><td>党史党建与思政教育研究</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>经济学院教授</td><td>宏观经济与区域发展战略</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>公共管理学院教授</td><td>公共管理与治理现代化</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>法学院教授</td><td>法治政府与依法行政</td></tr>";
+  h += "<tr><td>党政机关专家</td><td>市政府原秘书长</td><td>城市治理与政策制定</td></tr>";
+  h += "<tr><td>党政机关专家</td><td>国家发改委政策研究室专家</td><td>宏观政策与战略规划</td></tr>";
+  h += "<tr><td>党校教授</td><td>中央党校 / 市委党校教授</td><td>党的创新理论宣传阐释</td></tr>";
+  h += "<tr><td>数字化专家</td><td>数字政府领域资深专家</td><td>智慧城市与政务数字化</td></tr>";
+  return h;
+}
+function entTeachers(){
+  var h = "";
+  h += "<tr><td>资深教授博导</td><td>经济与管理学院教授</td><td>战略管理与创新研究</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>数字经济领域教授</td><td>数字化转型与人工智能</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>金融学院教授</td><td>资本市场与公司金融</td></tr>";
+  h += "<tr><td>资深教授博导</td><td>产业研究专家</td><td>产业创新与科技战略</td></tr>";
+  h += "<tr><td>行业高管</td><td>知名企业原战略总监</td><td>企业战略与组织变革</td></tr>";
+  h += "<tr><td>行业高管</td><td>头部互联网企业原高管</td><td>数字化转型实战</td></tr>";
+  h += "<tr><td>行业专家</td><td>知名投行 / 咨询公司合伙人</td><td>资本运作与并购重组</td></tr>";
+  h += "<tr><td>领导力专家</td><td>国际认证领导力教练</td><td>高绩效团队建设</td></tr>";
+  return h;
 }
 
-
-function generatePlan() {
-  var clientType = document.getElementById('fClientType').value;
-  var clientName = document.getElementById('fClientName').value.trim();
-  var projectName = document.getElementById('fProjectName').value.trim() || (clientName + '定制化培训项目');
-  var duration = document.getElementById('fDuration').value || '5天';
-  var budget = document.getElementById('fBudget').value || '待定';
-  var needs = document.getElementById('fNeeds').value.trim() || '通用能力提升';
-  var people = document.getElementById('fPeople').value || '30-50';
-  var schedule = document.getElementById('fSchedule').value.trim() || '待定';
-
-  if (!clientType || !clientName) { toast('请填写客户类型和单位名称'); return; }
-
-  for (var i = 1; i <= 4; i++) document.getElementById('p' + i).className = 'step-pip done';
-
-  addMsg('user', '请求生成方案：' + projectName);
-  showTyping();
-
-  var prompt = '你是终身教育学院的AI培训方案专家。请根据以下信息，生成一份专业、详细的定制化培训方案。方案要内容专业、格式规范、体现交大水准。
-
-【客户信息】
-客户类型：' + clientType + '
-客户单位：' + clientName + '
-培训项目：' + projectName + '
-培训人数：' + people + '人
-培训时长：' + duration + '
-人均预算：' + budget + '
-核心需求：' + needs + '
-期望时间：' + schedule + '
-
-【方案要求】
-请生成包含以下八部分的完整培训方案（用清晰的Markdown格式，h2为一级标题，h3为二级标题，表格用Markdown表格）：
-一、项目背景分析
-二、培训目标设定（用表格列出4个层次）
-三、课程体系设计（按模块列出，每门课用表格：课程名称|核心内容|师资来源|学时）
-四、师资安排建议（用表格列出拟邀师资及研究方向）
-五、教学管理与服务保障（用表格列出管理措施）
-六、培训报价与预算说明（用表格列出各项费用）
-七、办学条件与联系方式
-八、方案总结
-
-注意：所有课程和师资信息要具体、真实、可落地，充分体现终身教育学院学术水准！';
-
-  callAI([{ role: "user", content: prompt }], 2000).then(function(resp) {
-    removeTyping();
-    if (resp) {
-      var planHTML = '<div class="plan-box a-in">' +
-        '<div class="plan-top-bar">' +
-          '<div class="plan-top-left">' +
-            '<div style="width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:9px;font-weight:700;color:white;flex-shrink:0;">终教</div>' +
-            '<div class="plan-top-title">终身教育学院 — AI生成定制培训方案</div>' +
-          '</div>' +
-          '<div class="plan-top-right">' +
-            '<button class="plan-cmd" id="copyBtn">📋 复制全文</button>' +
-            '<button class="plan-cmd" id="print2Btn">🖨 打印</button>' +
-          '</div>' +
-        '</div>' +
-        '<div class="plan-body" id="planBody">' +
-          '<h2>终身教育学院「' + clientName + '」定制化培训方案</h2>' +
-          '<p style="text-align:center;color:#888;font-size:11.5px;">方案编号：SJTU-AI-' + String(Date.now()).slice(-6) + '  |  <span style="color:#27ae60;font-weight:600;">🤖 AI智能生成</span> | 培训人数：' + people + '人  | 预排时间：' + schedule + '</p>' +
-          '<div style="background:#f0f4ff;border:1px solid #c0d0f0;border-radius:10px;padding:18px 20px;margin:14px 0;font-size:13.5px;line-height:2;color:#222;">' +
-            resp.replace(/
-/g, '<br>') +
-          '</div>' +
-          '<p style="background:#fff8e8;padding:12px 16px;border-radius:8px;font-size:12.5px;line-height:1.8;">💡 <strong>说明：</strong>以上方案由阿里云通义千问AI智能生成，内容仅供参考。如需进一步调整或有特殊需求，请联系学院工作人员完善方案细节。' +
-          '<br>📞 联系方式：021-6282xxxx（张老师）/ cep@sjtu.edu.cn / sce.sjtu.edu.cn</p>' +
-          '<div class="plan-watermark">终身教育学院 · sce.sjtu.edu.cn · 饥水思水 · 爱国荣校</div>' +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:7px;margin-top:12px;">' +
-        '<button class="gen-btn" style="flex:1;padding:11px;" id="regenBtn">🔄 AI重新生成方案</button>' +
-        '<button class="action-btn primary" style="flex:1;padding:11px;border-radius:10px;" id="exportBtn2">📥 导出PDF</button>' +
-      '</div>';
-
-      currentPlan = planHTML;
-      addPlanMsg(planHTML);
-      conversationHistory.push({ role: 'user', content: '生成方案：' + projectName });
-      conversationHistory.push({ role: 'ai', content: '[方案已生成]' });
-      saveHistory();
-      scrollBottom();
-      toast('✅ AI方案生成成功！');
-
-      setTimeout(function() {
-        var rb = document.getElementById('regenBtn');
-        if (rb) rb.addEventListener('click', function() { generatePlan(); });
-        var cb = document.getElementById('copyBtn');
-        if (cb) cb.addEventListener('click', function() {
-          var body = document.getElementById('planBody');
-          if (body) {
-            navigator.clipboard.writeText(body.innerText).then(function() {
-              cb.classList.add('copied');
-              cb.textContent = '✅ 已复制';
-              setTimeout(function() { cb.classList.remove('copied'); cb.textContent = '📋 复制全文'; }, 2000);
-            });
-          }
-        });
-        var eb = document.getElementById('exportBtn2');
-        if (eb) eb.addEventListener('click', function() { window.print(); });
-      }, 300);
-    } else {
-      removeTyping();
-      addMsg('ai', '抱歉，AI服务暂时不可用，请检查网络连接后重试。');
-      scrollBottom();
-    }
-  }).catch(function() {
-    removeTyping();
-    addMsg('ai', '抱歉，AI服务暂时不可用，请稍后重试。');
-    scrollBottom();
-  });
+/* ===== 预算模板 ===== */
+function budgetTbl(d){
+  var tf = d * 880, mf = d * 55, sf = d * 110, hf = d * 380, ef = d * 160, of = 600;
+  var tot = tf + mf + sf + hf + ef + of;
+  var h = "";
+  h += "<tr><td>培训费（师资、教学管理）</td><td>¥"+tf.toLocaleString()+"/人</td><td>核心费用，含课程研发与教学</td></tr>";
+  h += "<tr><td>教材资料费</td><td>¥"+mf.toLocaleString()+"/人</td><td>课程资料袋、学习手册</td></tr>";
+  h += "<tr><td>现场教学交通与讲解</td><td>¥"+sf.toLocaleString()+"/人</td><td>含接送巴士及教学点讲解</td></tr>";
+  h += "<tr><td>住宿费</td><td>¥"+hf.toLocaleString()+"/人</td><td>标准间"+d+"晚</td></tr>";
+  h += "<tr><td>餐饮费</td><td>¥"+ef.toLocaleString()+"/人</td><td>含三餐</td></tr>";
+  h += "<tr><td>其他杂费</td><td>¥"+of.toLocaleString()+"/人</td><td>证书、合影、场地等</td></tr>";
+  h += "<tr style='background:#e8f5ee;font-weight:600;'><td>合计（初步估算）</td><td colspan=2>¥"+tot.toLocaleString()+"/人 · "+d+"天"+(d*6)+"学时</td></tr>";
+  return h;
 }
 
-function buildPlan(clientType, clientName, projectName, duration, budget, needs, people, schedule) {
-  var today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
-  var days = { '3天':3,'5天':5,'7天':7,'10天':10,'14天':14,'定制':5 }[duration] || 5;
+/* ===== 完整方案生成 ===== */
+function buildPlan(type, name, project, dur, budget, needs, people, time){
+  var today = new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});
+  var days = {"3天":3,"5天":5,"7天":7,"10天":10,"14天":14,"定制":5}[dur] || 5;
+  var crs = type === "企业" ? entCourses(days) : govCourses(days);
+  var tech = type === "企业" ? entTeachers() : govTeachers();
+  var btbl = budgetTbl(days);
+  var pid = "GC-" + String(Date.now()).slice(-6);
+  var pn = project || (name + "定制化培训项目");
 
-  var courses = clientType === '党委' || clientType === '政府' ? buildGovCourses(days) : buildEntCourses(days);
-  var teachers = clientType === '党委' || clientType === '政府' ? buildGovTeachers() : buildEntTeachers();
-  var budgetTbl = buildBudget(days, budget);
+  var bg  = type === "企业" ? "企业数字化转型与高质量发展" : "干部能力现代化建设与国家治理体系现代化";
+  var bg2 = type === "企业" ? "全球产业变革与企业创新升级" : "长三角一体化与区域协调发展";
+  var kl  = type === "企业" ? "企业战略管理与数字化转型理论体系" : "党的创新理论与现代化治理知识体系";
+  var nl  = type === "企业" ? "制定并有效执行企业发展战略，推动组织变革与创新" : "运用现代化治理思维分析和处理复杂公共事务，提升科学决策水平";
+  var sl  = type === "企业" ? "企业家精神、社会责任意识与可持续发展理念" : "政治定力、宗旨意识、使命担当与廉洁自律";
 
-  return '<div class="plan-box a-in">' +
-    '<div class="plan-top-bar">' +
-      '<div class="plan-top-left">' +
-        '<div style="width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:9px;font-weight:700;color:white;flex-shrink:0;">终教</div>' +
-        '<div class="plan-top-title">终身教育学院 — 定制培训方案</div>' +
-      '</div>' +
-      '<div class="plan-top-right">' +
-        '<button class="plan-cmd" id="copyBtn">📋 复制</button>' +
-        '<button class="plan-cmd" id="print2Btn">🖨️ 打印</button>' +
-      '</div>' +
-    '</div>' +
-    '<div class="plan-body" id="planBody">' +
-      '<h2>终身教育学院「' + clientName + '」定制化培训方案</h2>' +
-      '<p style="text-align:center;color:#888;font-size:11.5px;">方案编号：SJTU-CEP-' + String(Date.now()).slice(-6) + ' | 生成日期：' + today + ' | 培训人数：' + people + '人 | 预排时间：' + schedule + '</p>' +
-
-      '<h3>一、项目背景分析</h3>' +
-      '<p>结合国家关于<span class="hl">' + (clientType === '企业' ? '企业数字化转型与高质量发展' : '干部能力现代化建设与国家治理体系现代化') + '</span>的战略部署，及<span class="hl">' + (clientType === '企业' ? '全球产业变革与企业创新升级' : '长三角一体化与区域协调发展') + '</span>的时代背景，贵单位提出本次培训恰逢其时。</p>' +
-      '<p>终身教育学院传承交大百廿薪火，坚持"立德树人"根本任务，依托学校优势学科，对标国际名校，整合<span class="hl">国际关系学院、安泰经济与管理学院、电子信息学院、马克思主义学院</span>等院系资源，以及<span class="hl">全球创新研究院</span>的前沿研究成果，为贵单位精心打造本次高端研修项目。</p>' +
-      '<p><em>培训特色：学科交叉 · 校企融汇 · 中外汇通 · 产学结合 · 定制培养</em></p>' +
-
-      '<h3>二、培训目标设定</h3>' +
-      '<p><strong>总体目标：</strong>通过系统化学习，使全体学员在<span class="hl">知识层面</span>掌握前沿理论与政策动态；在<span class="hl">能力层面</span>能够运用科学方法解决实际问题；在<span class="hl">素养层面</span>强化责任担当与创新精神。</p>' +
-      '<table><tr><th style="width:22%">目标层次</th><th style="width:78%">具体目标</th></tr>' +
-      '<tr><td>知识层面</td><td>系统掌握' + (clientType === '企业' ? '企业战略管理与数字化转型理论体系' : '党的创新理论与现代化治理知识体系') + '，了解最新政策走向与行业前沿动态</td></tr>' +
-      '<tr><td>能力层面</td><td>能够' + (clientType === '企业' ? '制定并有效执行企业发展战略，推动组织变革与创新' : '运用现代化治理思维分析和处理复杂公共事务，提升科学决策水平') + '</td></tr>' +
-      '<tr><td>素养层面</td><td>增强' + (clientType === '企业' ? '企业家精神、社会责任意识与可持续发展理念' : '政治定力、宗旨意识、使命担当与廉洁自律') + '，塑造新时代领导者应有的品格</td></tr>' +
-      '<tr><td>实践层面</td><td>通过现场教学与案例研讨，将理论学习转化为推动实际工作的能力</td></tr>' +
-      '</table>' +
-
-      '<h3>三、课程体系设计</h3>' +
-      '<p><em>注：课程设计遵循"理论前沿—实践应用—研讨升华"逻辑，采用模块化组合方式，' + days + '天培训共计约' + (days * 6) + '学时。</em></p>' +
-      courses +
-
-      '<h3>四、师资安排建议</h3>' +
-      '<p><em>师资由"终身教育学院资深教授博导 + 党政机关专家型领导 + 行业领军企业高管"三方构成，确保理论高度与实践经验兼备。</em></p>' +
-      '<table><tr><th style="width:22%">师资来源</th><th style="width:40%">拟邀师资（初步建议）</th><th style="width:38%">研究方向 / 擅长领域</th></tr>' +
-      teachers +
-      '</table>' +
-      '<p style="font-size:11px;color:#888;margin-top:8px;">* 以上师资为初步建议，可根据客户具体需求进行定向邀约与调整。学院拥有500+位校内外专家资源库。</p>' +
-
-      '<h3>五、教学管理与服务保障</h3>' +
-      '<table><tr><th style="width:22%">管理维度</th><th style="width:78%">具体措施</th></tr>' +
-      '<tr><td>管理模式</td><td>配备"项目班主任 + 学术导师"双负责制，全程跟班服务</td></tr>' +
-      '<tr><td>训前管理</td><td>训前需求调研（问卷+电话访谈）、学员分组，开班导学、课程资料袋发放</td></tr>' +
-      '<tr><td>训中管理</td><td>每日课程复盘、学员座谈、学术答疑、应急响应机制</td></tr>' +
-      '<tr><td>结业管理</td><td>结业考核、成果汇报、颁发终身教育学院结业证书（含学时证明）</td></tr>' +
-      '<tr><td>训后跟踪</td><td>训后1个月跟踪问效、学员社群维护、持续学习资源推送</td></tr>' +
-      '<tr><td>质量保障</td><td>课程满意度评估（Kirkpatrick四级评估法）、教学督导、教学材料汇编</td></tr>' +
-      '</table>' +
-
-      '<h3>六、培训报价与预算说明</h3>' +
-      '<table><tr><th>费用项目</th><th>说明</th><th>备注</th></tr>' +
-      budgetTbl +
-      '</table>' +
-      '<p style="font-size:11px;color:#888;margin-top:8px;">* 以上为初步估算，具体费用将根据最终课程安排、师资级别、住宿及餐饮标准进行精准核算。</p>' +
-      '<p style="background:#fff8e8;padding:10px 14px;border-radius:8px;font-size:12px;margin-top:10px;">🎁 <strong>优惠说明：</strong>对<span class="hl">10人及以上团队</span>或<span class="hl">年度长期合作项目</span>，可享有学院协议优惠价，欢迎来电洽谈！</p>' +
-
-      '<h3>七、办学条件与联系方式</h3>' +
-      '<h4>办学条件</h4>' +
-      '<ul>' +
-        '<li><strong>教学设施：</strong>学院多媒体阶梯教室、案例研讨室、图书馆资源；配备先进同传设备、录播系统</li>' +
-        '<li><strong>住宿条件：</strong>交大长宁校区学术交流中心，标准间配置，安全舒适</li>' +
-        '<li><strong>餐饮服务：</strong>交大食堂或合作餐厅，食品安全保障，提供清真餐选项</li>' +
-        '<li><strong>区位优势：</strong>位于上海长宁区，紧邻虹桥综合交通枢纽，可链接长三角丰富实践教学资源</li>' +
-      '</ul>' +
-      '<h4>联系我们</h4>' +
-      '<table><tr><th style="width:30%">联系项目</th><th>信息</th></tr>' +
-      '<tr><td>办学地址</td><td>上海市长宁区法华镇路535号 终身教育学院长宁校区</td></tr>' +
-      '<tr><td>项目热线</td><td>021-6282xxxx（张老师）/ 138-xxxx-xxxx（李老师）</td></tr>' +
-      '<tr><td>官方邮箱</td><td>cep@sjtu.edu.cn</td></tr>' +
-      '<tr><td>官方网站</td><td>sce.sjtu.edu.cn</td></tr>' +
-      '</table>' +
-
-      '<h3>八、方案总结</h3>' +
-      '<p>综上，本方案旨在为贵单位量身打造一个融<span class="hl">"政治高度、理论深度、实践广度"</span>于一体的高端研修项目，依托：</p>' +
-      '<ul>' +
-        '<li>终身教育学院<span class="hl">百廿年学术底蕴</span>与<span class="hl">全球创新研究院</span>前沿资源</li>' +
-        '<li><span class="hl">国际关系、安泰管理、电子信息、马克思主义</span>等优势学科师资</li>' +
-        '<li><span class="hl">浦东、张江、长三角一体化</span>等上海标杆实践教学资源</li>' +
-        '<li>覆盖<span class="hl">全国30+省市区县</span>的干部培训成功经验</li>' +
-      '</ul>' +
-      '<p>助力贵单位人才培养与能力建设，实现知识共创、资源共享、发展共赢！</p>' +
-      '<div class="plan-watermark">终身教育学院 · sce.sjtu.edu.cn · 饮水思源 · 爱国荣校</div>' +
-    '</div>' +
-  '</div>' +
-  '<div style="display:flex;gap:7px;margin-top:12px;">' +
-    '<button class="gen-btn" style="flex:1;padding:10px;" id="modifyBtn">🔄 根据反馈优化方案</button>' +
-    '<button class="action-btn primary" style="flex:1;padding:10px;border-radius:10px;" id="apiBtn">🔗 接入AI完整版</button>' +
-  '</div>';
+  var plan = "";
+  plan += "<div class=pw id=planWrap>";
+  plan += "<div class=pt>";
+  plan += "<div class=ptl><div class=pb2>甘</div><div class=pbb>一成智培 — 定制培训方案</div></div>";
+  plan += "<div class=pbz><button class=pbt id=copyBtn>📋 复制全文</button><button class=pbt id=printBtn>🖨️ 打印</button></div>";
+  plan += "</div>";
+  plan += "<div class=pby id=planBody>";
+  plan += "<h2>一成智培「"+esc(name)+"」定制化培训方案</h2>";
+  plan += "<p style='text-align:center;color:#888;font-size:11.5px'>方案编号："+pid+" &nbsp;|&nbsp;生成日期："+today+" &nbsp;|&nbsp;培训人数："+esc(people)+"人 &nbsp;|&nbsp;预排时间："+esc(time)+"</p>";
+  plan += "<h3>一、项目背景分析</h3>";
+  plan += "<p>结合国家关于<span class=hl2>"+esc(bg)+"</span>的战略部署，及<span class=hl2>"+esc(bg2)+"</span>的时代背景，贵单位提出本次培训恰逢其时。</p>";
+  plan += "<p>一成智培整合优质学术资源与行业师资力量，依托专业化培训体系，为贵单位精心打造本次高端研修项目。</p>";
+  plan += "<p><em>培训特色：学科交叉 · 校企融汇 · 中外汇通 · 产学结合 · 定制培养</em></p>";
+  plan += "<h3>二、培训目标设定</h3>";
+  plan += "<p><strong>总体目标：</strong>通过系统化学习，使全体学员在<span class=hl2>知识层面</span>掌握前沿理论与政策动态；在<span class=hl2>能力层面</span>能够运用科学方法解决实际问题；在<span class=hl2>素养层面</span>强化责任担当与创新精神。</p>";
+  plan += "<table><tr><th style='width:22%'>目标层次</th><th style='width:78%'>具体目标</th></tr>";
+  plan += "<tr><td>知识层面</td><td>系统掌握"+esc(kl)+"，了解最新政策走向与行业前沿动态</td></tr>";
+  plan += "<tr><td>能力层面</td><td>能够"+esc(nl)+"</td></tr>";
+  plan += "<tr><td>素养层面</td><td>增强"+esc(sl)+"，塑造新时代领导者应有的品格</td></tr>";
+  plan += "<tr><td>实践层面</td><td>通过现场教学与案例研讨，将理论学习转化为推动实际工作的能力</td></tr></table>";
+  plan += "<h3>三、课程体系设计</h3>";
+  plan += "<p><em>注：课程设计遵循\"理论前沿—实践应用—研讨升华\"逻辑，采用模块化组合方式，"+days+"天培训共计约"+(days*6)+"学时。</em></p>";
+  plan += crs;
+  plan += "<h3>四、师资安排建议</h3>";
+  plan += "<p><em>师资由\"资深教授博导 + 党政机关专家 + 行业领军企业高管\"三方构成，确保理论高度与实践经验兼备。</em></p>";
+  plan += "<table><tr><th style='width:22%'>师资来源</th><th style='width:40%'>拟邀师资（初步建议）</th><th style='width:38%'>研究方向 / 擅长领域</th></tr>"+tech+"</table>";
+  plan += "<p style='font-size:11px;color:#888;margin-top:8px'>* 以上师资为初步建议，可根据客户具体需求进行定向邀约与调整。平台拥有500+位校内外专家资源库。</p>";
+  plan += "<h3>五、教学管理与服务保障</h3>";
+  plan += "<table><tr><th style='width:22%'>管理维度</th><th style='width:78%'>具体措施</th></tr>";
+  plan += "<tr><td>管理模式</td><td>配备\"项目班主任 + 学术导师\"双负责制，全程跟班服务</td></tr>";
+  plan += "<tr><td>训前管理</td><td>训前需求调研（问卷+电话访谈）、学员分组、开班导学、课程资料袋发放</td></tr>";
+  plan += "<tr><td>训中管理</td><td>每日课程复盘、学员座谈、学术答疑、应急响应机制</td></tr>";
+  plan += "<tr><td>结业管理</td><td>结业考核、成果汇报、颁发结业证书（含学时证明）</td></tr>";
+  plan += "<tr><td>训后跟踪</td><td>训后1个月跟踪问效、学员社群维护、持续学习资源推送</td></tr>";
+  plan += "<tr><td>质量保障</td><td>课程满意度评估（Kirkpatrick四级评估法）、教学督导、教学材料汇编</td></tr></table>";
+  plan += "<h3>六、培训报价与预算说明</h3>";
+  plan += "<table><tr><th>费用项目</th><th>说明</th><th>备注</th></tr>"+btbl+"</table>";
+  plan += "<p style='font-size:11px;color:#888;margin-top:8px'>* 以上为初步估算，具体费用将根据最终课程安排、师资级别、住宿及餐饮标准进行精准核算。</p>";
+  plan += "<p style='background:#f0f8f5;padding:10px 14px;border-radius:8px;font-size:12px;margin-top:10px'>🎁 <strong>优惠说明：</strong>对<span class=hl2>10人及以上团队</span>或<span class=hl2>年度长期合作项目</span>，可享有协议优惠价，欢迎来电洽谈！</p>";
+  plan += "<h3>七、办学条件与联系方式</h3>";
+  plan += "<h4>办学条件</h4><ul>";
+  plan += "<li><strong>教学设施：</strong>多媒体阶梯教室、案例研讨室；配备先进同传设备、录播系统</li>";
+  plan += "<li><strong>住宿条件：</strong>合作酒店标准间，安全舒适</li>";
+  plan += "<li><strong>餐饮服务：</strong>合作餐厅，食品安全保障，提供清真餐选项</li>";
+  plan += "<li><strong>区位优势：</strong>可根据客户需求灵活安排全国各地上门培训</li></ul>";
+  plan += "<h4>联系我们</h4>";
+  plan += "<table><tr><th style='width:30%'>联系项目</th><th>信息</th></tr>";
+  plan += "<tr><td>服务热线</td><td>400-XXX-XXXX（张老师）</td></tr>";
+  plan += "<tr><td>官方邮箱</td><td>service@gancheng-zhipei.com</td></tr>";
+  plan += "<tr><td>官方网站</td><td>www.gancheng-zhipei.com</td></tr></table>";
+  plan += "<h3>八、方案总结</h3>";
+  plan += "<p>综上，本方案旨在为贵单位量身打造一个融<span class=hl2>\"政治高度、理论深度、实践广度\"</span>于一体的高端研修项目，依托：</p><ul>";
+  plan += "<li>一成智培<span class=hl2>专业化</span>学术资源与<span class=hl2>行业前沿</span>师资力量</li>";
+  plan += "<li><span class=hl2>经济管理、公共管理、马克思主义</span>等优势学科师资</li>";
+  plan += "<li><span class=hl2>浦东、张江、长三角一体化</span>等标杆实践教学资源</li>";
+  plan += "<li>覆盖<span class=hl2>全国多个省市区县</span>的培训成功经验</li></ul>";
+  plan += "<p>助力贵单位人才培养与能力建设，实现知识共创、资源共享、发展共赢！</p>";
+  plan += "<div class=pwm>一成智培 · 甘于奉献 · 成己达人</div>";
+  plan += "</div></div>";
+  plan += "<div class=paz>";
+  plan += "<button class=ab id=modifyBtn style='flex:1;font-size:14px;font-weight:600'>🔄 修改方案</button>";
+  plan += "<button class='ab abp' id=apiBtn style='flex:1;font-size:14px;font-weight:600'>🔗 接入AI</button>";
+  plan += "</div>";
+  return plan;
 }
 
-function buildGovCourses(days) {
-  return '' +
-    '<h4>【核心模块一】党的创新理论与党性教育 &nbsp;（' + Math.floor(days*1.5) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>习近平新时代中国特色社会主义思想专题</td><td>系统学习党的创新理论核心要义与实践要求</td><td>马克思主义学院教授</td><td>4</td></tr>' +
-    '<tr><td>党史学习教育与初心使命</td><td>从党史中汲取智慧力量，坚定理想信念</td><td>市委党校专家</td><td>3</td></tr>' +
-    '<tr><td>全面从严治党与党风廉政建设</td><td>新时代党建要求与廉政风险防控体系</td><td>纪委/监委专家</td><td>3</td></tr>' +
-    '<tr><td>树立和践行正确政绩观专题</td><td>习近平总书记关于正确政绩观的重要论述</td><td>党校教授</td><td>2</td></tr></table>' +
-
-    '<h4>【核心模块二】宏观形势与政策分析 &nbsp;（' + Math.floor(days*1.2) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>当前宏观经济形势研判与应对策略</td><td>国内外经济形势分析，政策走向预测</td><td>安泰经管学院教授</td><td>4</td></tr>' +
-    '<tr><td>国家战略与区域协调发展</td><td>长三角一体化、粤港澳大湾区等战略解读</td><td>发改委专家</td><td>3</td></tr>' +
-    '<tr><td>数字中国战略与政府数字化转型</td><td>数字政府建设的顶层设计与实践路径</td><td>电子信息学院教授</td><td>3</td></tr>' +
-    '<tr><td>一带一路与高水平对外开放</td><td>国际格局变化与对外开放新战略</td><td>国际关系学院教授</td><td>2</td></tr></table>' +
-
-    '<h4>【核心模块三】治理能力现代化 &nbsp;（' + Math.floor(days*1.5) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>公共管理与服务创新实践</td><td>提升政务服务效能的路径与方法</td><td>国务学院教授</td><td>4</td></tr>' +
-    '<tr><td>突发事件应急管理与危机沟通</td><td>突发事件的预警、应对与舆情管理</td><td>应急管理局专家</td><td>3</td></tr>' +
-    '<tr><td>领导干部法治思维与依法行政</td><td>法治政府建设的核心要求与实践</td><td>法学院教授</td><td>3</td></tr>' +
-    '<tr><td>领导力与高绩效团队建设</td><td>新时期领导干部能力素质提升路径</td><td>知名领导力专家</td><td>3</td></tr></table>' +
-
-    '<h4>【核心模块四】上海实践与现场教学 &nbsp;（' + Math.floor(days*1) + '学时）</h4>' +
-    '<table><tr><th>教学点</th><th>教学主题</th><th>形式</th><th>学时</th></tr>' +
-    '<tr><td>浦东开发开放陈列馆</td><td>改革开放精神与浦东开发经验启示</td><td>现场教学</td><td>3</td></tr>' +
-    '<tr><td>中共一大会址纪念馆</td><td>党史教育与初心使命再学习</td><td>现场教学</td><td>2</td></tr>' +
-    '<tr><td>长三角一体化示范区</td><td>区域协同发展的创新实践</td><td>现场考察</td><td>3</td></tr>' +
-    '<tr><td>张江科学城展示厅</td><td>科技创新与战略性新兴产业布局</td><td>现场教学</td><td>2</td></tr></table>';
-}
-
-function buildEntCourses(days) {
-  return '' +
-    '<h4>【核心模块一】战略与领导力 &nbsp;（' + Math.floor(days*1.5) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>企业战略管理与商业模式创新</td><td>从战略规划到战略落地的全链条方法论</td><td>安泰经管学院教授</td><td>6</td></tr>' +
-    '<tr><td>变革领导力与组织韧性建设</td><td>不确定时代的领导力重塑与组织适应力</td><td>知名领导力专家</td><td>4</td></tr>' +
-    '<tr><td>公司治理与股权激励机制</td><td>现代企业制度与长效激励机制设计</td><td>法学院/金融学院教授</td><td>3</td></tr>' +
-    '<tr><td>企业文化建设与传承</td><td>企业文化体系构建与代际传承</td><td>管理学教授</td><td>2</td></tr></table>' +
-
-    '<h4>【核心模块二】创新与数字化转型 &nbsp;（' + Math.floor(days*1.5) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>数字经济与产业变革趋势</td><td>AI、大数据、云计算驱动的行业变革</td><td>电子信息学院教授</td><td>4</td></tr>' +
-    '<tr><td>企业数字化转型实战路径</td><td>从信息化到数智化的转型方法论</td><td>数字化转型专家</td><td>4</td></tr>' +
-    '<tr><td>科技创新与产业生态构建</td><td>以张江科学城为案例剖析创新生态</td><td>全球创新研究院</td><td>3</td></tr>' +
-    '<tr><td>人工智能时代的商业机遇</td><td>大模型与AIGC在企业中的应用实践</td><td>AI领域专家</td><td>3</td></tr></table>' +
-
-    '<h4>【核心模块三】经营管理实务 &nbsp;（' + Math.floor(days*1.2) + '学时）</h4>' +
-    '<table><tr><th>课程名称</th><th>核心内容</th><th>师资来源</th><th>学时</th></tr>' +
-    '<tr><td>财务管理与资本运作</td><td>企业财务决策与投融资策略优化</td><td>安泰金融学院教授</td><td>4</td></tr>' +
-    '<tr><td>战略性人力资源管理</td><td>人才获取、激励与组织发展体系</td><td>人力资源专家</td><td>3</td></tr>' +
-    '<tr><td>市场营销与品牌战略</td><td>数字化时代的品牌突围与用户运营</td><td>品牌营销专家</td><td>3</td></tr>' +
-    '<tr><td>ESG与可持续发展</td><td>ESG理念融入企业战略与实践路径</td><td>可持续专家</td><td>2</td></tr></table>' +
-
-    '<h4>【核心模块四】上海标杆企业参访 &nbsp;（' + Math.floor(days*1) + '学时）</h4>' +
-    '<table><tr><th>参访企业/基地</th><th>看点</th><th>形式</th><th>学时</th></tr>' +
-    '<tr><td>张江科学城展示厅</td><td>科技创新生态与高新产品研发</td><td>现场教学</td><td>3</td></tr>' +
-    '<tr><td>中国商飞集团 / 特斯拉超级工厂</td><td>先进制造与大国重器精神</td><td>现场考察</td><td>3</td></tr>' +
-    '<tr><td>上海自贸区临港新片区</td><td>制度创新与开放新高地</td><td>座谈交流</td><td>2</td></tr>' +
-    '<tr><td>头部互联网企业（可定制）</td><td>数字化转型最佳实践分享</td><td>座谈交流</td><td>2</td></tr></table>';
-}
-
-function buildGovTeachers() {
-  return '' +
-    '<tr><td>终身教育学院</td><td>国际关系学院资深教授 / 博导</td><td>国际形势与外交战略研究</td></tr>' +
-    '<tr><td>终身教育学院</td><td>安泰经济与管理学院教授 / 博导</td><td>宏观经济与区域发展战略</td></tr>' +
-    '<tr><td>终身教育学院</td><td>马克思主义学院教授</td><td>党史党建与思政教育研究</td></tr>' +
-    '<tr><td>终身教育学院</td><td>电子信息学院教授 / 博导</td><td>数字政府与智慧城市研究</td></tr>' +
-    '<tr><td>终身教育学院</td><td>国际与公共事务学院教授</td><td>公共管理与治理现代化</td></tr>' +
-    '<tr><td>党政机关</td><td>上海市政府原副秘书长</td><td>城市治理与政策制定</td></tr>' +
-    '<tr><td>党政机关</td><td>国家发改委政策研究室专家</td><td>宏观政策与战略规划</td></tr>' +
-    '<tr><td>党政机关</td><td>中央党校 / 市委党校教授</td><td>党的创新理论宣传阐释</td></tr>';
-}
-
-function buildEntTeachers() {
-  return '' +
-    '<tr><td>终身教育学院</td><td>安泰经济与管理学院教授 / 博导</td><td>战略管理与创新研究</td></tr>' +
-    '<tr><td>终身教育学院</td><td>电子信息学院教授 / 博导</td><td>数字化转型与人工智能</td></tr>' +
-    '<tr><td>终身教育学院</td><td>安泰金融学院教授</td><td>资本市场与公司金融</td></tr>' +
-    '<tr><td>终身教育学院</td><td>全球创新研究院研究员</td><td>产业创新与科技战略</td></tr>' +
-    '<tr><td>终身教育学院</td><td>设计学院教授</td><td>创新设计与用户体验</td></tr>' +
-    '<tr><td>行业专家</td><td>原华为战略规划部总监</td><td>企业战略与组织变革</td></tr>' +
-    '<tr><td>行业专家</td><td>头部互联网企业原高管</td><td>数字化转型实战</td></tr>' +
-    '<tr><td>行业专家</td><td>知名投行 / 咨询公司合伙人</td><td>资本运作与并购重组</td></tr>';
-}
-
-function buildBudget(days, budget) {
-  var tf = days * 880;
-  var mf = days * 55;
-  var sf = days * 110;
-  var hf = days * 380;
-  var ef = days * 160;
-  var of = 600;
-  var total = tf + mf + sf + hf + ef + of;
-  return '' +
-    '<tr><td>培训费（师资、教学管理）</td><td>¥' + tf.toLocaleString() + '/人</td><td>核心费用，含课程研发与教学</td></tr>' +
-    '<tr><td>教材资料费</td><td>¥' + mf.toLocaleString() + '/人</td><td>课程资料袋、学习手册</td></tr>' +
-    '<tr><td>现场教学交通与讲解</td><td>¥' + sf.toLocaleString() + '/人</td><td>含接送巴士及教学点讲解</td></tr>' +
-    '<tr><td>住宿费（交大交流中心）</td><td>¥' + hf.toLocaleString() + '/人</td><td>标准间' + days + '晚</td></tr>' +
-    '<tr><td>餐饮费</td><td>¥' + ef.toLocaleString() + '/人</td><td>含三餐</td></tr>' +
-    '<tr><td>其他杂费</td><td>¥' + of.toLocaleString() + '/人</td><td>证书、合影、场地等</td></tr>' +
-    '<tr style="background:#e8f0ff;font-weight:600;"><td>合计（初步估算）</td><td colspan="2">¥' + total.toLocaleString() + '/人 · ' + days + '天' + (days*6) + '学时</td></tr>';
-}
-
-// ===== UI =====
-function addMsg(role, content) {
-  var container = document.getElementById('msgContainer');
-  document.getElementById('welcomePage').style.display = 'none';
-
-  var div = document.createElement('div');
-  div.className = 'msg msg-' + role + ' a-in';
-
-  var logo = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div>';
-  var bubble = '<div class="msg-bubble">' + content.replace(/\n/g, '<br>') + '</div>';
-  var time = '<div class="msg-time">' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}) + '</div>';
-
-  if (role === 'ai') {
-    div.innerHTML = logo + '<div class="msg-right"><div class="msg-bubble">' + content.replace(/\n/g, '<br>') + '</div>' + time + '</div>';
-  } else {
-    div.innerHTML = '<div class="msg-right"><div class="msg-bubble">' + content.replace(/\n/g, '<br>') + '</div>' + time + '</div>' + logo;
-  }
-  container.appendChild(div);
+/* ===== 对话消息 ===== */
+function addMsg(role, html){
+  var list = $("msgList");
+  $("welcomeBox").style.display = "none";
+  var div = document.createElement("div");
+  div.className = role === "user" ? "mgr" : "mg";
+  var ac = role === "ai" ? "mav mavai" : "mav mavus";
+  var ava = "<div class="+ac+">" + (role === "ai" ? "甘" : "我") + "</div>";
+  var bc = role === "ai" ? "bbai" : "bbus";
+  var bw = "<div class=bw><div class='bb "+bc+"'>"+html+"</div><div class=tm>"+now()+"</div></div>";
+  div.innerHTML = role === "ai" ? (ava + bw) : (bw + ava);
+  list.appendChild(div);
   scrollBottom();
 }
 
-function addPlanMsg(html) {
-  var container = document.getElementById('msgContainer');
-  document.getElementById('welcomePage').style.display = 'none';
+function showTyping(){
+  var list = $("msgList");
+  $("welcomeBox").style.display = "none";
+  var div = document.createElement("div");
+  div.className = "mg";
+  div.id = "typingEl";
+  div.innerHTML = "<div class='mav mavai'>甘</div><div class=bw><div class='bb bbai' style='padding:14px 18px;'><div style='display:flex;gap:4px;'><div class=td></div><div class=td></div><div class=td></div></div></div></div>";
+  list.appendChild(div);
+  scrollBottom();
+}
+function removeTyping(){
+  var el = $("typingEl");
+  if(el && el.parentNode) el.parentNode.removeChild(el);
+}
 
-  var div = document.createElement('div');
-  div.className = 'msg msg-ai a-in';
-  div.innerHTML = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div><div class="msg-right"><div class="msg-bubble" style="padding:0;background:none;border:none;">' + html + '</div></div>';
-  container.appendChild(div);
-
-  // 绑定方案内按钮
-  setTimeout(function() {
-    var copyBtn = document.getElementById('copyBtn');
-    if (copyBtn) copyBtn.addEventListener('click', copyPlan);
-    var print2Btn = document.getElementById('print2Btn');
-    if (print2Btn) print2Btn.addEventListener('click', function() { window.print(); });
-    var modifyBtn = document.getElementById('modifyBtn');
-    if (modifyBtn) modifyBtn.addEventListener('click', modifyPlan);
-    var apiBtn = document.getElementById('apiBtn');
-    if (apiBtn) apiBtn.addEventListener('click', function() { toast('请联系学院技术团队配置 AI API Key'); });
+function addPlan(html){
+  var list = $("msgList");
+  $("welcomeBox").style.display = "none";
+  var div = document.createElement("div");
+  div.className = "mg";
+  div.innerHTML = "<div class='mav mavai'>甘</div><div class=bw><div class='bb bbai' style='padding:0;background:none;border:none;'>"+html+"</div></div>";
+  list.appendChild(div);
+  scrollBottom();
+  setTimeout(function(){
+    var cb = $("copyBtn");
+    if(cb) cb.onclick = function(){
+      var b = $("planBody");
+      if(b) navigator.clipboard.writeText(b.innerText).then(function(){
+        cb.textContent = "✅ 已复制";
+        setTimeout(function(){ cb.textContent = "📋 复制全文"; }, 2000);
+      });
+    };
+    var pb = $("printBtn");
+    if(pb) pb.onclick = function(){ window.print(); };
+    var mb = $("modifyBtn");
+    if(mb) mb.onclick = function(){
+      $("inputTxt").value = "请根据以下反馈优化方案：[描述您的修改意见]";
+      $("inputTxt").focus();
+      toast("请描述修改意见");
+    };
+    var ab = $("apiBtn");
+    if(ab) ab.onclick = function(){ toast("请联系技术团队配置AI API Key"); };
   }, 100);
-
-  scrollBottom();
 }
 
-function showTyping() {
-  var container = document.getElementById('msgContainer');
-  document.getElementById('welcomePage').style.display = 'none';
-  var div = document.createElement('div');
-  div.className = 'msg msg-ai';
-  div.id = 'typingBox';
-  div.innerHTML = '<div style="width:36px;height:36px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;">终</div><div class="msg-right"><div class="msg-bubble" style="padding:14px 18px;"><div class="typing-row"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>';
-  container.appendChild(div);
-  scrollBottom();
+/* ===== 欢迎页快速卡片 ===== */
+function quickSelect(type){
+  $("fType").value = type;
+  $("inputTxt").value = "我需要定制" + (type === "党委" ? "党委系统领导干部" : type === "政府" ? "政府系统领导干部" : "企业内训") + "培训方案";
+  $("inputTxt").focus();
 }
 
-function removeTyping() {
-  var el = document.getElementById('typingBox');
-  if (el) el.parentNode.removeChild(el);
+/* ===== 智能回复 ===== */
+function getResp(txt){
+  var t = txt.toLowerCase();
+  if(t.indexOf("党委") >= 0 || t.indexOf("政府") >= 0 || t.indexOf("干部") >= 0)
+    return "好的！我将为您生成党委/政府系统领导干部定制培训方案。<br><br>请补充以下关键信息：<br>1. 培训人数和时长（建议5-7天）<br>2. 人均预算范围<br>3. 核心培训主题方向（如：数字政府、基层治理、乡村振兴等）<br>4. 期望的现场教学安排<br><br>或在右侧填写「需求表单」，一键生成完整方案！";
+  if(t.indexOf("企业") >= 0 || t.indexOf("内训") >= 0)
+    return "了解！企业内训是一成智培的传统优势领域。<br><br><strong>请提供：</strong><br>1. 企业类型（国企/民企/外企）<br>2. 培训对象层级（中层/高层/骨干）<br>3. 核心主题（战略领导力/数字化转型/创新管理等）<br>4. 是否需要标杆企业参访<br><br>填写右侧表单，立即生成专属方案！";
+  if(t.indexOf("数字政府") >= 0)
+    return "数字政府建设专题培训是热门项目！<br><br><strong>可供参考的课程模块：</strong><br>• 数字中国战略与智慧城市治理<br>• 大数据与AI驱动的公共服务创新<br>• &ldquo;一网通办&rdquo;经验与借鉴<br><br><strong>可安排的现场教学点：</strong><br>• 浦东城市运营中心<br>• 张江科学城展示厅<br>• 长三角一体化示范区<br><br>请告诉我具体单位、人数和预算，立即生成完整方案！";
+  if(t.indexOf("修改") >= 0 || t.indexOf("调整") >= 0 || t.indexOf("重新生成") >= 0){
+    if(currentPlan) return "好的，请告诉我需要修改的具体内容：<br>• 📝 调整课程模块？<br>• 👨‍🏫 更换师资？<br>• ⏱️ 改变时长？<br>• 💰 修改预算？<br>• 🗺️ 调整现场教学？";
+    return "目前暂无已生成的方案可供修改。请先告诉我您的需求，我会为您生成初始方案，再根据您的意见调整。";
+  }
+  return "我是<span class='hl2'>一成智培</span>，智能化培训方案生成助手。<br><br><strong>我能为您：</strong><br>• 🎯 生成定制培训方案（党委/政府/企业）<br>• 📚 匹配课程模块与师资资源<br>• 💰 提供报价预算参考<br>• 🔄 根据反馈优化方案<br><br>请告诉我您的培训需求，或直接点击上方卡片开始！";
 }
 
-function scrollBottom() {
-  var c = document.getElementById('msgScroll');
-  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+/* ===== 发送消息 ===== */
+function sendMsg(){
+  var txt = $("inputTxt").value.trim();
+  if(!txt) return;
+  $("inputTxt").value = "";
+  autoResize();
+  addMsg("user", txt.replace(/\n/g,"<br>"));
+  _chatHistory.push({role:"user", content:txt});
+  showTyping();
+  setTimeout(function(){
+    removeTyping();
+    var resp = getResp(txt);
+    addMsg("ai", resp);
+    _chatHistory.push({role:"ai", content:resp});
+    saveHistory();
+  }, 1200 + Math.random() * 600);
 }
 
-function newChat() {
-  if (conversationHistory.length > 0 && !confirm('确定要开始新对话？当前对话将保存到历史记录。')) return;
-  conversationHistory = [];
+/* ===== 生成方案 ===== */
+function genPlan(){
+  var type = $("fType").value;
+  var name = $("fName").value.trim();
+  if(!type || !name){ toast("请填写客户类型和单位名称"); return; }
+  for(var i = 1; i <= 4; i++) $("s"+i).className = "sp sdone";
+  var proj  = $("fProject").value.trim() || (name + "定制化培训项目");
+  var dur   = $("fDuration").value || "5天";
+  var bud   = $("fBudget").value || "待定";
+  var needs = $("fNeeds").value.trim() || "通用能力提升";
+  var people = $("fPeople").value || "30-50";
+  var time  = $("fTime").value.trim() || "待定";
+  addMsg("user", "请求生成方案：" + proj);
+  showTyping();
+  setTimeout(function(){
+    removeTyping();
+    var html = buildPlan(type, name, proj, dur, bud, needs, people, time);
+    currentPlan = html;
+    addPlan(html);
+    _chatHistory.push({role:"user", content:"生成方案：" + proj});
+    _chatHistory.push({role:"ai", content:"[方案已生成]"});
+    saveHistory();
+    toast("✅ 方案生成成功！");
+  }, 3000);
+}
+
+/* ===== 欢迎页绑定 ===== */
+function bindWelcome(){
+  var c = $("cardParty");
+  if(c) c.onclick = function(){ quickSelect("党委"); };
+  c = $("cardEnterprise");
+  if(c) c.onclick = function(){ quickSelect("企业"); };
+  c = $("cardCustom");
+  if(c) c.onclick = function(){ $("fType").value = "政府"; $("inputTxt").value = "我有定制专题培训需求"; $("inputTxt").focus(); };
+
+  var q = $("q1");
+  if(q) q.onclick = function(){ $("inputTxt").value = "我需要定制一套党委/政府系统领导干部培训方案"; $("inputTxt").focus(); };
+  q = $("q2");
+  if(q) q.onclick = function(){ $("inputTxt").value = "我们是某国企，想做中高层领导力内训定制方案"; $("inputTxt").focus(); };
+  q = $("q3");
+  if(q) q.onclick = function(){ $("inputTxt").value = "请生成一份数字政府建设专题培训班方案"; $("inputTxt").focus(); };
+  q = $("q4");
+  if(q) q.onclick = function(){ $("inputTxt").value = "如何修改已有的方案？"; $("inputTxt").focus(); };
+}
+
+/* ===== 历史记录 ===== */
+function saveHistory(){
+  var sessions = JSON.parse(localStorage.getItem("gcplan_v1s") || "[]");
+  var title = (_chatHistory.map(function(m){ return m.content; }).join("\n").slice(0,45)) || "新对话";
+  sessions.unshift({id:Date.now(), title:title, msgs:_chatHistory.slice(-10)});
+  localStorage.setItem("gcplan_v1s", JSON.stringify(sessions.slice(0,20)));
+  renderHistory();
+}
+function loadHistory(){ renderHistory(); }
+function renderHistory(){
+  var sessions = JSON.parse(localStorage.getItem("gcplan_v1s") || "[]");
+  var el = $("historyList");
+  if(!el) return;
+  el.innerHTML = "";
+  for(var i = 0; i < sessions.length; i++){
+    var item = document.createElement("div");
+    item.className = "ha" + (i === 0 ? " on" : "");
+    item.textContent = sessions[i].title;
+    (function(s){ item.onclick = function(){ loadSession(s.id); }; })(sessions[i]);
+    el.appendChild(item);
+  }
+}
+function loadSession(id){
+  var sessions = JSON.parse(localStorage.getItem("gcplan_v1s") || "[]");
+  var s = null;
+  for(var i = 0; i < sessions.length; i++){ if(sessions[i].id === id){ s = sessions[i]; break; } }
+  if(!s) return;
+  _chatHistory = [];
+  $("msgList").innerHTML = "";
+  $("welcomeBox").style.display = "none";
+  for(var j = 0; j < s.msgs.length; j++){
+    var m = s.msgs[j];
+    if(m.content === "[方案已生成]" && currentPlan) addPlan(currentPlan);
+    else addMsg(m.role, m.content.replace ? m.content.replace(/\n/g,"<br>") : m.content);
+    _chatHistory.push(m);
+  }
+}
+
+/* ===== 新建对话 ===== */
+function newChat(){
+  if(_chatHistory.length > 0 && !confirm("确定要开始新对话？")) return;
+  _chatHistory = [];
   currentPlan = null;
-  document.getElementById('msgContainer').innerHTML = '' +
-    '<div id="welcomePage">' +
-      '<div class="welcome-box">' +
-        '<div style="width:88px;height:88px;background:linear-gradient(135deg,#003A6E,#005A9E);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Noto Serif SC,serif;font-size:22px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 32px rgba(0,58,110,0.2);">终教<br><span style="font-size:11px;letter-spacing:1px;">学院</span></div>' +
-        '<div class="welcome-title">欢迎使用交大智培</div>' +
-        '<div class="welcome-desc">我是终身教育学院的 <strong>AI 定制培训方案生成助手</strong>。<br>依托交大百廿年学术底蕴与<strong>全球创新研究院</strong>资源，为您快速生成专业定制化培训方案。</div>' +
-        '<div class="type-cards">' +
-          '<div class="type-card" id="cardParty"><div class="type-card-icon">🏛️</div><div class="type-card-title">党委系统培训</div><div class="type-card-desc">党性教育、治理能力现代化建设</div></div>' +
-          '<div class="type-card" id="cardGov"><div class="type-card-icon">🏢</div><div class="type-card-title">政府系统培训</div><div class="type-card-desc">数字政府、基层治理创新</div></div>' +
-          '<div class="type-card" id="cardEnt"><div class="type-card-icon">💼</div><div class="type-card-title">企业内训</div><div class="type-card-desc">战略领导力、数字化转型</div></div>' +
-        '</div>' +
-        '<div class="quick-btns">' +
-          '<button class="quick-btn" id="q1">我需要定制干部培训方案</button>' +
-          '<button class="quick-btn" id="q2">国企中高层领导力内训</button>' +
-          '<button class="quick-btn" id="q3">数字政府建设专题培训班</button>' +
-          '<button class="quick-btn" id="q4">修改已有方案</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  // 重新绑定欢迎页按钮
-  setTimeout(function() {
-    document.getElementById('cardParty').addEventListener('click', function() { quickSelect('党委'); });
-    document.getElementById('cardGov').addEventListener('click', function() { quickSelect('政府'); });
-    document.getElementById('cardEnt').addEventListener('click', function() { quickSelect('企业'); });
-    document.getElementById('q1').addEventListener('click', function() { fillInput('我需要定制一套党委/政府系统领导干部培训方案'); });
-    document.getElementById('q2').addEventListener('click', function() { fillInput('我们是某国企，想做中高层领导力内训定制方案'); });
-    document.getElementById('q3').addEventListener('click', function() { fillInput('请生成一份数字政府建设专题培训班方案'); });
-    document.getElementById('q4').addEventListener('click', function() { fillInput('如何修改已有的方案？'); });
-  }, 50);
-  for (var i = 1; i <= 4; i++) document.getElementById('p' + i).className = 'step-pip' + (i === 1 ? ' active' : '');
+  var h = "";
+  h += "<div class=wp id=welcomeBox>";
+  h += "<div class=wlg>甘</div>";
+  h += "<div class=wt>欢迎使用一成智培</div>";
+  h += "<p>我是 <strong>一成智培 AI 定制培训方案生成助手</strong>。依托专业学术资源与行业师资，为您快速生成高质量定制化培训方案。</p>";
+  h += "<div class=tc>";
+  h += "<div class=tc2 id=cardParty><div class=tci>🏛️</div><div class=tct>党委/政府系统</div><div class=tcd>党性教育、治理能力建设</div></div>";
+  h += "<div class=tc2 id=cardEnterprise><div class=tci>💼</div><div class=tct>企业内训</div><div class=tcd>战略领导力、数字化转型</div></div>";
+  h += "<div class=tc2 id=cardCustom><div class=tci>🎯</div><div class=tct>定制专题</div><div class=tcd>行业专题、个性化需求</div></div>";
+  h += "</div>";
+  h += "<div class=qb>";
+  h += "<button class=qb2 id=q1>定制干部培训方案</button>";
+  h += "<button class=qb2 id=q2>企业管理层内训</button>";
+  h += "<button class=qb2 id=q3>数字政府建设专题</button>";
+  h += "<button class=qb2 id=q4>修改已有方案</button>";
+  h += "</div></div>";
+  $("msgList").innerHTML = h;
+  for(var i = 1; i <= 4; i++) $("s"+i).className = "sp" + (i === 1 ? " spon" : "");
+  bindWelcome();
   saveHistory();
 }
 
-function quickSelect(type) {
-  document.getElementById('fClientType').value = type;
-  fillInput('我需要定制' + (type === '党委' ? '党委系统领导干部' : type === '政府' ? '政府系统领导干部' : '企业内训') + '培训方案');
+/* ===== 初始化 ===== */
+function init(){
+  $("btnNew").onclick = newChat;
+  $("btnExport").onclick = function(){
+    if(!currentPlan){ toast("暂无方案可导出，请先生成"); return; }
+    toast("使用浏览器打印功能可导出PDF");
+    window.print();
+  };
+  $("btnPrint").onclick = function(){ window.print(); };
+  $("sendBtn").onclick = sendMsg;
+  $("inputTxt").onkeydown = function(e){
+    if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendMsg(); }
+  };
+  $("inputTxt").oninput = autoResize;
+
+  bindWelcome();
+
+  $("tabForm").onclick = function(){
+    $("tabForm").className = "tb tbon";
+    $("tabKB").className = "tb";
+    $("panelForm").style.display = "block";
+    $("panelKB").style.display = "none";
+  };
+  $("tabKB").onclick = function(){
+    $("tabKB").className = "tb tbon";
+    $("tabForm").className = "tb";
+    $("panelKB").style.display = "block";
+    $("panelForm").style.display = "none";
+  };
+  $("fmtA").onclick = function(){
+    selectedFmt = "A";
+    $("fmtA").className = "fc2 fcon";
+    $("fmtB").className = "fc2";
+  };
+  $("fmtB").onclick = function(){
+    selectedFmt = "B";
+    $("fmtB").className = "fc2 fcon";
+    $("fmtA").className = "fc2";
+  };
+  $("genBtn").onclick = genPlan;
+
+  loadHistory();
 }
 
-function fillInput(text) {
-  var inp = document.getElementById('inputText');
-  inp.value = text;
-  inp.focus();
-}
+document.addEventListener("DOMContentLoaded", init);
 
-function switchTab(tab) {
-  document.getElementById('tabForm').className = 'tab-btn' + (tab === 'form' ? ' active' : '');
-  document.getElementById('tabKB').className = 'tab-btn' + (tab === 'kb' ? ' active' : '');
-  document.getElementById('panelForm').style.display = tab === 'form' ? 'block' : 'none';
-  document.getElementById('panelKB').style.display = tab === 'kb' ? 'block' : 'none';
-}
+// Expose critical functions to window for HTML onclick
+window.genPlan = genPlan;
+window.sendMsg = sendMsg;
+window.newChat = newChat;
+window.quickSelect = quickSelect;
 
-function selectFmt(fmt) {
-  selectedFormat = fmt;
-  document.getElementById('fmtA').className = 'fmt-card' + (fmt === 'A' ? ' on' : '');
-  document.getElementById('fmtB').className = 'fmt-card' + (fmt === 'B' ? ' on' : '');
-}
-
-function copyPlan() {
-  var body = document.getElementById('planBody');
-  if (!body) return;
-  var text = body.innerText;
-  navigator.clipboard.writeText(text).then(function() {
-    var btn = document.getElementById('copyBtn');
-    if (btn) { btn.classList.add('copied'); btn.textContent = '✅ 已复制'; }
-    setTimeout(function() {
-      if (btn) { btn.classList.remove('copied'); btn.textContent = '📋 复制'; }
-    }, 2000);
-  });
-}
-
-function modifyPlan() {
-  var inp = document.getElementById('inputText');
-  inp.value = '请根据以下反馈优化方案：[描述您的修改意见]';
-  inp.focus();
-  toast('请描述修改意见，AI将重新生成相应部分');
-}
-
-function exportPlan() {
-  if (!currentPlan) { toast('暂无方案可导出，请先生成'); return; }
-  toast('使用浏览器打印功能可导出PDF');
-  window.print();
-}
-
-function toast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2500);
-}
-
-// ===== 历史 =====
-function saveHistory() {
-  var sessions = JSON.parse(localStorage.getItem('jdzp2_sessions') || '[]');
-  var title = conversationHistory.map(function(m) { return m.content; }).join('\n').slice(0, 45) || '新对话';
-  sessions.unshift({ id: Date.now(), title: title, msgs: conversationHistory.slice(-10) });
-  localStorage.setItem('jdzp2_sessions', JSON.stringify(sessions.slice(0, 20)));
-  renderHistory();
-}
-
-function loadHistory() { renderHistory(); }
-
-function renderHistory() {
-  var sessions = JSON.parse(localStorage.getItem('jdzp2_sessions') || '[]');
-  var list = document.getElementById('historyList');
-  if (!list) return;
-  list.innerHTML = sessions.map(function(s, i) {
-    return '<div class="history-item' + (i === 0 ? ' active' : '') + '" data-id="' + s.id + '">' + s.title + '</div>';
-  }).join('');
-  var items = list.querySelectorAll('.history-item');
-  for (var j = 0; j < items.length; j++) {
-    items[j].addEventListener('click', (function(idx) {
-      return function() { loadSession(sessions[idx].id); };
-    })(j));
-  }
-}
-
-function loadSession(id) {
-  var sessions = JSON.parse(localStorage.getItem('jdzp2_sessions') || '[]');
-  var session = null;
-  for (var i = 0; i < sessions.length; i++) { if (sessions[i].id === id) { session = sessions[i]; break; } }
-  if (!session) return;
-  var container = document.getElementById('msgContainer');
-  if (container) container.innerHTML = '';
-  if (session.msgs) {
-    for (var k = 0; k < session.msgs.length; k++) {
-      var m = session.msgs[k];
-      if (m.content !== '[方案已生成]') addMsg(m.role, m.content);
-    }
-  }
-}
+})()
 </script>
+</body>
+</html>
